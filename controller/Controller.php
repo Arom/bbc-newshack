@@ -4,7 +4,7 @@ class Controller {
     protected $method = "get"; 
     protected $slim = null;
     protected $db = null; 
-    protected $apiKey = "&apikey=YB0MY3VMHyllzPqEf5alVj5bUvGpvDVi";
+    protected $apiKey = "YB0MY3VMHyllzPqEf5alVj5bUvGpvDVi";
     protected $apiBaseUrl = "http://data.test.bbc.co.uk/bbcrd-juicer/articles?";
     protected static $extraParams = array(); 
     protected $base_url = '/newshack/public/index.php/';
