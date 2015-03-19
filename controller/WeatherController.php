@@ -7,7 +7,26 @@ class WeatherController extends Controller {
 
     function defaultAction($params) {
         if ($this->method == "post") {
-            echo "post";
+            $container = array();
+            $p = array();
+            
+            $weather = JSONRequester::parseJSONFromURL
+                            ("http://weather-api-proxy.cloud.bbc.co.uk/weather/feeds/en/" . $params['id'] . "/3hourlyforecast.json");
+            
+            foreach ($weather->forecastContent->forecasts as $forecast) {
+                $container = array();
+                $container['day'] = $forecast->dayName;
+                $container['date'] = $this->getDate($forecast);
+                $container['time'] = $this->getTime($forecast);
+                $container['visibility'] = $this->getVisibility($forecast);
+                $container['temp'] = $this->getTemp($forecast);
+                $container['type'] = $this->getType($forecast);
+                $container['winddir'] = $this->getWind($forecast)->direction;
+                $container['windmph'] = $this->getWind($forecast)->windspeed->mph;
+                array_push($p, $container);
+            }
+            
+            $this->renderHTML('weather.html.twig');
         }
     }
 
