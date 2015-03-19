@@ -1,0 +1,9 @@
+{
+	"require": {
+		"slim/slim": "2.6.*",
+		"slim/views": "0.1.3",
+		"propel/propel1": "1.7.*", 
+		"zf1/zend-form": "1.12.*",
+		"twig/twig": "1.18.*"
+	}
+}
