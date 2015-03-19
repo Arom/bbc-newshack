@@ -20,6 +20,14 @@
  * @method UserQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method UserQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
+ * @method UserQuery leftJoinKeywords($relationAlias = null) Adds a LEFT JOIN clause to the query using the Keywords relation
+ * @method UserQuery rightJoinKeywords($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Keywords relation
+ * @method UserQuery innerJoinKeywords($relationAlias = null) Adds a INNER JOIN clause to the query using the Keywords relation
+ *
+ * @method UserQuery leftJoinLocation($relationAlias = null) Adds a LEFT JOIN clause to the query using the Location relation
+ * @method UserQuery rightJoinLocation($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Location relation
+ * @method UserQuery innerJoinLocation($relationAlias = null) Adds a INNER JOIN clause to the query using the Location relation
+ *
  * @method User findOne(PropelPDO $con = null) Return the first User matching the query
  * @method User findOneOrCreate(PropelPDO $con = null) Return the first User matching the query, or a new User object populated from the query conditions when no match is found
  *
@@ -354,6 +362,154 @@ abstract class BaseUserQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(UserPeer::SALT, $salt, $comparison);
+    }
+
+    /**
+     * Filter the query by a related Keywords object
+     *
+     * @param   Keywords|PropelObjectCollection $keywords  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 UserQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByKeywords($keywords, $comparison = null)
+    {
+        if ($keywords instanceof Keywords) {
+            return $this
+                ->addUsingAlias(UserPeer::ID, $keywords->getUserId(), $comparison);
+        } elseif ($keywords instanceof PropelObjectCollection) {
+            return $this
+                ->useKeywordsQuery()
+                ->filterByPrimaryKeys($keywords->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByKeywords() only accepts arguments of type Keywords or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Keywords relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return UserQuery The current query, for fluid interface
+     */
+    public function joinKeywords($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Keywords');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Keywords');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Keywords relation Keywords object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   KeywordsQuery A secondary query class using the current class as primary query
+     */
+    public function useKeywordsQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinKeywords($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Keywords', 'KeywordsQuery');
+    }
+
+    /**
+     * Filter the query by a related Location object
+     *
+     * @param   Location|PropelObjectCollection $location  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 UserQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByLocation($location, $comparison = null)
+    {
+        if ($location instanceof Location) {
+            return $this
+                ->addUsingAlias(UserPeer::ID, $location->getUserId(), $comparison);
+        } elseif ($location instanceof PropelObjectCollection) {
+            return $this
+                ->useLocationQuery()
+                ->filterByPrimaryKeys($location->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByLocation() only accepts arguments of type Location or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Location relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return UserQuery The current query, for fluid interface
+     */
+    public function joinLocation($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Location');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Location');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Location relation Location object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   LocationQuery A secondary query class using the current class as primary query
+     */
+    public function useLocationQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinLocation($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Location', 'LocationQuery');
     }
 
     /**

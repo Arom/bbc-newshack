@@ -4,44 +4,57 @@ require_once 'Controller.php';
 class UserController extends Controller {
     
     public function registerAction($params) { 
-        $auth = Auth::getInstance(); 
-        
-        $username = $params['username'];
-        $salt = $auth->generateSalt(); 
-        $password = $auth->hashPassword($params['password'], $salt);
+        if($this->method == "post") {
+            $params = $_POST;
+            
+            $auth = Auth::getInstance(); 
+            
+            $registrationErrors = $auth->registrationErrors($params);
+            if($registrationErrors != false) { 
+                $this->renderHTML('register.html.twig', array('registererror' => $registrationErrors));
+                die(); 
+            }
 
-        $user = new User(); 
-        $user->setUserName($username);
-        $user->setPassword($password);
-        $user->setSalt($salt);
-        $user->save();
+            $username = $params['username'];
+            $salt = $auth->generateSalt(); 
+            $password = $auth->hashPassword($params['password'], $salt);
+            
+            $user = new User(); 
+            $user->setUserName($username);
+            $user->setPassword($password);
+            $user->setSalt($salt);
+            $user->save();
+            
+            $this->addExtraParams(array('registersuccess' => true));
+        }
+        $this->renderHTML('register.html.twig');
     }
     
     public function loginAction($params) { 
-        $auth = Auth::getInstance();
-        
-        $user = UserQuery::create()->findOneByUserName($params['username']); 
-        if($user != null) { 
-            $passwordHash = $auth->hashPassword($params['password'], $user->getSalt()); 
-            if($passwordHash == $user->getPassword()) { 
+        if($this->method == "post") {
+            $params = $_POST;
+            
+            $auth = Auth::getInstance();
+
+            if($auth->authenticate($params['username'], $params['password'])) { 
                 $auth->saveSession($params['username'], $params['password']);
-                die('t');
-                return true; 
+                $this->slim->redirect($this->base_url . 'home');
+            }
+            else { 
+                $auth->clearSession(); 
+                $this->addExtraParams(array('loginerror' => 'Incorrect username or password. '));
+                __run_controller('home');
             }
         }
-        die('f');
-        return false; 
+        else {
+            
+        }
     }
     
     public function logoutAction($params) { 
         $auth = Auth::getInstance(); 
-        
         $auth->clearSession();
-    }
-    
-    public function checkLoggedInAction($params) { 
-        $auth = Auth::getInstance(); 
         
-        die($auth->isLoggedIn());
+        $this->slim->redirect($this->base_url . 'home');
     }
 }

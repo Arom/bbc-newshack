@@ -54,6 +54,18 @@ abstract class BaseUser extends BaseObject implements Persistent
     protected $salt;
 
     /**
+     * @var        PropelObjectCollection|Keywords[] Collection to store aggregation of Keywords objects.
+     */
+    protected $collKeywordss;
+    protected $collKeywordssPartial;
+
+    /**
+     * @var        PropelObjectCollection|Location[] Collection to store aggregation of Location objects.
+     */
+    protected $collLocations;
+    protected $collLocationsPartial;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      * @var        boolean
@@ -72,6 +84,18 @@ abstract class BaseUser extends BaseObject implements Persistent
      * @var        boolean
      */
     protected $alreadyInClearAllReferencesDeep = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $keywordssScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $locationsScheduledForDeletion = null;
 
     /**
      * Get the [id] column value.
@@ -308,6 +332,10 @@ abstract class BaseUser extends BaseObject implements Persistent
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->collKeywordss = null;
+
+            $this->collLocations = null;
+
         } // if (deep)
     }
 
@@ -430,6 +458,40 @@ abstract class BaseUser extends BaseObject implements Persistent
                 }
                 $affectedRows += 1;
                 $this->resetModified();
+            }
+
+            if ($this->keywordssScheduledForDeletion !== null) {
+                if (!$this->keywordssScheduledForDeletion->isEmpty()) {
+                    KeywordsQuery::create()
+                        ->filterByPrimaryKeys($this->keywordssScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->keywordssScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collKeywordss !== null) {
+                foreach ($this->collKeywordss as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->locationsScheduledForDeletion !== null) {
+                if (!$this->locationsScheduledForDeletion->isEmpty()) {
+                    LocationQuery::create()
+                        ->filterByPrimaryKeys($this->locationsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->locationsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collLocations !== null) {
+                foreach ($this->collLocations as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             $this->alreadyInSave = false;
@@ -592,6 +654,22 @@ abstract class BaseUser extends BaseObject implements Persistent
             }
 
 
+                if ($this->collKeywordss !== null) {
+                    foreach ($this->collKeywordss as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
+                if ($this->collLocations !== null) {
+                    foreach ($this->collLocations as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
 
             $this->alreadyInValidation = false;
         }
@@ -656,10 +734,11 @@ abstract class BaseUser extends BaseObject implements Persistent
      *                    Defaults to BasePeer::TYPE_PHPNAME.
      * @param     boolean $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to true.
      * @param     array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param     boolean $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
-    public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
+    public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
         if (isset($alreadyDumpedObjects['User'][$this->getPrimaryKey()])) {
             return '*RECURSION*';
@@ -677,6 +756,14 @@ abstract class BaseUser extends BaseObject implements Persistent
             $result[$key] = $virtualColumn;
         }
 
+        if ($includeForeignObjects) {
+            if (null !== $this->collKeywordss) {
+                $result['Keywordss'] = $this->collKeywordss->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collLocations) {
+                $result['Locations'] = $this->collLocations->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+        }
 
         return $result;
     }
@@ -831,6 +918,30 @@ abstract class BaseUser extends BaseObject implements Persistent
         $copyObj->setUserName($this->getUserName());
         $copyObj->setPassword($this->getPassword());
         $copyObj->setSalt($this->getSalt());
+
+        if ($deepCopy && !$this->startCopy) {
+            // important: temporarily setNew(false) because this affects the behavior of
+            // the getter/setter methods for fkey referrer objects.
+            $copyObj->setNew(false);
+            // store object hash to prevent cycle
+            $this->startCopy = true;
+
+            foreach ($this->getKeywordss() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addKeywords($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getLocations() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addLocation($relObj->copy($deepCopy));
+                }
+            }
+
+            //unflag object copy
+            $this->startCopy = false;
+        } // if ($deepCopy)
+
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -877,6 +988,475 @@ abstract class BaseUser extends BaseObject implements Persistent
         return self::$peer;
     }
 
+
+    /**
+     * Initializes a collection based on the name of a relation.
+     * Avoids crafting an 'init[$relationName]s' method name
+     * that wouldn't work when StandardEnglishPluralizer is used.
+     *
+     * @param string $relationName The name of the relation to initialize
+     * @return void
+     */
+    public function initRelation($relationName)
+    {
+        if ('Keywords' == $relationName) {
+            $this->initKeywordss();
+        }
+        if ('Location' == $relationName) {
+            $this->initLocations();
+        }
+    }
+
+    /**
+     * Clears out the collKeywordss collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return User The current object (for fluent API support)
+     * @see        addKeywordss()
+     */
+    public function clearKeywordss()
+    {
+        $this->collKeywordss = null; // important to set this to null since that means it is uninitialized
+        $this->collKeywordssPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collKeywordss collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialKeywordss($v = true)
+    {
+        $this->collKeywordssPartial = $v;
+    }
+
+    /**
+     * Initializes the collKeywordss collection.
+     *
+     * By default this just sets the collKeywordss collection to an empty array (like clearcollKeywordss());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initKeywordss($overrideExisting = true)
+    {
+        if (null !== $this->collKeywordss && !$overrideExisting) {
+            return;
+        }
+        $this->collKeywordss = new PropelObjectCollection();
+        $this->collKeywordss->setModel('Keywords');
+    }
+
+    /**
+     * Gets an array of Keywords objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this User is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|Keywords[] List of Keywords objects
+     * @throws PropelException
+     */
+    public function getKeywordss($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collKeywordssPartial && !$this->isNew();
+        if (null === $this->collKeywordss || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collKeywordss) {
+                // return empty collection
+                $this->initKeywordss();
+            } else {
+                $collKeywordss = KeywordsQuery::create(null, $criteria)
+                    ->filterByUser($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collKeywordssPartial && count($collKeywordss)) {
+                      $this->initKeywordss(false);
+
+                      foreach ($collKeywordss as $obj) {
+                        if (false == $this->collKeywordss->contains($obj)) {
+                          $this->collKeywordss->append($obj);
+                        }
+                      }
+
+                      $this->collKeywordssPartial = true;
+                    }
+
+                    $collKeywordss->getInternalIterator()->rewind();
+
+                    return $collKeywordss;
+                }
+
+                if ($partial && $this->collKeywordss) {
+                    foreach ($this->collKeywordss as $obj) {
+                        if ($obj->isNew()) {
+                            $collKeywordss[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collKeywordss = $collKeywordss;
+                $this->collKeywordssPartial = false;
+            }
+        }
+
+        return $this->collKeywordss;
+    }
+
+    /**
+     * Sets a collection of Keywords objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $keywordss A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return User The current object (for fluent API support)
+     */
+    public function setKeywordss(PropelCollection $keywordss, PropelPDO $con = null)
+    {
+        $keywordssToDelete = $this->getKeywordss(new Criteria(), $con)->diff($keywordss);
+
+
+        $this->keywordssScheduledForDeletion = $keywordssToDelete;
+
+        foreach ($keywordssToDelete as $keywordsRemoved) {
+            $keywordsRemoved->setUser(null);
+        }
+
+        $this->collKeywordss = null;
+        foreach ($keywordss as $keywords) {
+            $this->addKeywords($keywords);
+        }
+
+        $this->collKeywordss = $keywordss;
+        $this->collKeywordssPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Keywords objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related Keywords objects.
+     * @throws PropelException
+     */
+    public function countKeywordss(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collKeywordssPartial && !$this->isNew();
+        if (null === $this->collKeywordss || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collKeywordss) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getKeywordss());
+            }
+            $query = KeywordsQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUser($this)
+                ->count($con);
+        }
+
+        return count($this->collKeywordss);
+    }
+
+    /**
+     * Method called to associate a Keywords object to this object
+     * through the Keywords foreign key attribute.
+     *
+     * @param    Keywords $l Keywords
+     * @return User The current object (for fluent API support)
+     */
+    public function addKeywords(Keywords $l)
+    {
+        if ($this->collKeywordss === null) {
+            $this->initKeywordss();
+            $this->collKeywordssPartial = true;
+        }
+
+        if (!in_array($l, $this->collKeywordss->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddKeywords($l);
+
+            if ($this->keywordssScheduledForDeletion and $this->keywordssScheduledForDeletion->contains($l)) {
+                $this->keywordssScheduledForDeletion->remove($this->keywordssScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	Keywords $keywords The keywords object to add.
+     */
+    protected function doAddKeywords($keywords)
+    {
+        $this->collKeywordss[]= $keywords;
+        $keywords->setUser($this);
+    }
+
+    /**
+     * @param	Keywords $keywords The keywords object to remove.
+     * @return User The current object (for fluent API support)
+     */
+    public function removeKeywords($keywords)
+    {
+        if ($this->getKeywordss()->contains($keywords)) {
+            $this->collKeywordss->remove($this->collKeywordss->search($keywords));
+            if (null === $this->keywordssScheduledForDeletion) {
+                $this->keywordssScheduledForDeletion = clone $this->collKeywordss;
+                $this->keywordssScheduledForDeletion->clear();
+            }
+            $this->keywordssScheduledForDeletion[]= clone $keywords;
+            $keywords->setUser(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clears out the collLocations collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return User The current object (for fluent API support)
+     * @see        addLocations()
+     */
+    public function clearLocations()
+    {
+        $this->collLocations = null; // important to set this to null since that means it is uninitialized
+        $this->collLocationsPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collLocations collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialLocations($v = true)
+    {
+        $this->collLocationsPartial = $v;
+    }
+
+    /**
+     * Initializes the collLocations collection.
+     *
+     * By default this just sets the collLocations collection to an empty array (like clearcollLocations());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initLocations($overrideExisting = true)
+    {
+        if (null !== $this->collLocations && !$overrideExisting) {
+            return;
+        }
+        $this->collLocations = new PropelObjectCollection();
+        $this->collLocations->setModel('Location');
+    }
+
+    /**
+     * Gets an array of Location objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this User is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|Location[] List of Location objects
+     * @throws PropelException
+     */
+    public function getLocations($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collLocationsPartial && !$this->isNew();
+        if (null === $this->collLocations || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collLocations) {
+                // return empty collection
+                $this->initLocations();
+            } else {
+                $collLocations = LocationQuery::create(null, $criteria)
+                    ->filterByUser($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collLocationsPartial && count($collLocations)) {
+                      $this->initLocations(false);
+
+                      foreach ($collLocations as $obj) {
+                        if (false == $this->collLocations->contains($obj)) {
+                          $this->collLocations->append($obj);
+                        }
+                      }
+
+                      $this->collLocationsPartial = true;
+                    }
+
+                    $collLocations->getInternalIterator()->rewind();
+
+                    return $collLocations;
+                }
+
+                if ($partial && $this->collLocations) {
+                    foreach ($this->collLocations as $obj) {
+                        if ($obj->isNew()) {
+                            $collLocations[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collLocations = $collLocations;
+                $this->collLocationsPartial = false;
+            }
+        }
+
+        return $this->collLocations;
+    }
+
+    /**
+     * Sets a collection of Location objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $locations A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return User The current object (for fluent API support)
+     */
+    public function setLocations(PropelCollection $locations, PropelPDO $con = null)
+    {
+        $locationsToDelete = $this->getLocations(new Criteria(), $con)->diff($locations);
+
+
+        $this->locationsScheduledForDeletion = $locationsToDelete;
+
+        foreach ($locationsToDelete as $locationRemoved) {
+            $locationRemoved->setUser(null);
+        }
+
+        $this->collLocations = null;
+        foreach ($locations as $location) {
+            $this->addLocation($location);
+        }
+
+        $this->collLocations = $locations;
+        $this->collLocationsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Location objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related Location objects.
+     * @throws PropelException
+     */
+    public function countLocations(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collLocationsPartial && !$this->isNew();
+        if (null === $this->collLocations || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collLocations) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getLocations());
+            }
+            $query = LocationQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByUser($this)
+                ->count($con);
+        }
+
+        return count($this->collLocations);
+    }
+
+    /**
+     * Method called to associate a Location object to this object
+     * through the Location foreign key attribute.
+     *
+     * @param    Location $l Location
+     * @return User The current object (for fluent API support)
+     */
+    public function addLocation(Location $l)
+    {
+        if ($this->collLocations === null) {
+            $this->initLocations();
+            $this->collLocationsPartial = true;
+        }
+
+        if (!in_array($l, $this->collLocations->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddLocation($l);
+
+            if ($this->locationsScheduledForDeletion and $this->locationsScheduledForDeletion->contains($l)) {
+                $this->locationsScheduledForDeletion->remove($this->locationsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	Location $location The location object to add.
+     */
+    protected function doAddLocation($location)
+    {
+        $this->collLocations[]= $location;
+        $location->setUser($this);
+    }
+
+    /**
+     * @param	Location $location The location object to remove.
+     * @return User The current object (for fluent API support)
+     */
+    public function removeLocation($location)
+    {
+        if ($this->getLocations()->contains($location)) {
+            $this->collLocations->remove($this->collLocations->search($location));
+            if (null === $this->locationsScheduledForDeletion) {
+                $this->locationsScheduledForDeletion = clone $this->collLocations;
+                $this->locationsScheduledForDeletion->clear();
+            }
+            $this->locationsScheduledForDeletion[]= clone $location;
+            $location->setUser(null);
+        }
+
+        return $this;
+    }
+
     /**
      * Clears the current object and sets all attributes to their default values
      */
@@ -908,10 +1488,28 @@ abstract class BaseUser extends BaseObject implements Persistent
     {
         if ($deep && !$this->alreadyInClearAllReferencesDeep) {
             $this->alreadyInClearAllReferencesDeep = true;
+            if ($this->collKeywordss) {
+                foreach ($this->collKeywordss as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collLocations) {
+                foreach ($this->collLocations as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
 
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
+        if ($this->collKeywordss instanceof PropelCollection) {
+            $this->collKeywordss->clearIterator();
+        }
+        $this->collKeywordss = null;
+        if ($this->collLocations instanceof PropelCollection) {
+            $this->collLocations->clearIterator();
+        }
+        $this->collLocations = null;
     }
 
     /**

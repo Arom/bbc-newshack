@@ -39,7 +39,35 @@ class Auth {
         return substr(md5(rand()), 0, 7);
     }
     
+    public function authenticate($username, $password) { 
+        $user = UserQuery::create()->findOneByUserName($username); 
+        if($user != null) { 
+            $passwordHash = $this->hashPassword($password, $user->getSalt()); 
+            if($passwordHash == $user->getPassword()) { 
+                return true; 
+            }
+        }
+        return false; 
+    }
+    
     public function isLoggedIn() { 
         return $this->loggedIn;
+    }
+    
+    public function getUserName() { 
+        return $this->username;
+    }
+    
+    public function registrationErrors($params) { 
+        if(UserQuery::create()->findOneByUserName($params['username']) != null) { 
+            return "This usernanme is already taken. ";
+        }
+        else if(strlen($params['password']) < 6) { 
+            return "Password needs to be at least 6 characters long. " . strlen($params['password']);
+        }
+        else if($params['password'] != $params['confirmpassword']) {
+            return "Passwords don't match. ";
+        }
+        return false;
     }
 }
