@@ -4,6 +4,8 @@ class Controller {
     protected $method = "get"; 
     protected $slim = null;
     protected $db = null; 
+    protected static $extraParams = array(); 
+    protected $base_url = '/newshack/public/index.php/';
     
     public function __construct() {
         $this->slim = Slim\Slim::getInstance();
@@ -17,12 +19,23 @@ class Controller {
         $this->method = $method; 
     } 
     
-    public function renderHTML($template, $data = null) { 
+    public function renderHTML($template, $data = array()) { 
+        $data = array_merge($data, Controller::$extraParams);
+
+        $auth = Auth::getInstance();
+        if($auth->isLoggedIn()) {
+            $data['username'] = $auth->getUserName(); 
+        }
+        
         $view = $this->slim->view(); 
         $view->parserExtensions = array(new \Slim\Views\TwigExtension());
         $view->setTemplatesDirectory("../view");
         
         $view->display($template, $data);
+    }
+    
+    public function addExtraParams($vars = array()) { 
+        Controller::$extraParams = array_merge(Controller::$extraParams, $vars);
     }
     
     public function debugAction($params) { 

@@ -53,4 +53,8 @@ class Auth {
     public function isLoggedIn() { 
         return $this->loggedIn;
     }
+    
+    public function getUserName() { 
+        return $this->username;
+    }
 }

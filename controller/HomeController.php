@@ -7,6 +7,11 @@ class HomeController extends Controller {
         if($this->method == "post") { 
             echo "this is post.<br>";
         }
-        $this->renderHTML('test.html.twig', array('x' => 'yvalue'));
+        $this->renderHTML('home.html.twig');
+    }
+    
+    function testJSONAction($params) { 
+        require 'JSONRequester.php';
+        JSONRequester::getFromURLToArray('http://api.wipmania.com/json');
     }
 }
