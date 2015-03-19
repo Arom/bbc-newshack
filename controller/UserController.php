@@ -43,13 +43,8 @@ class UserController extends Controller {
     
     public function logoutAction($params) { 
         $auth = Auth::getInstance(); 
-        
         $auth->clearSession();
-    }
-    
-    public function checkLoggedInAction($params) { 
-        $auth = Auth::getInstance(); 
         
-        die($auth->isLoggedIn());
+        $this->slim->redirect($this->base_url . 'home');
     }
 }
