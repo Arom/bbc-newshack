@@ -6,7 +6,7 @@
 
     set_include_path(get_include_path() . PATH_SEPARATOR . '../model/build/classes' . PATH_SEPARATOR . '../controller' . PATH_SEPARATOR . '../lib');
     
-    require 'Auth.php'; 
+    require '../lib/Auth.php'; 
     $auth = Auth::getInstance(); 
     
     $app = new \Slim\Slim($slim_config);
