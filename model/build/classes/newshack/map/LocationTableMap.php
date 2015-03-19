@@ -3,7 +3,7 @@
 
 
 /**
- * This class defines the structure of the 'user' table.
+ * This class defines the structure of the 'location' table.
  *
  *
  *
@@ -14,13 +14,13 @@
  *
  * @package    propel.generator.newshack.map
  */
-class UserTableMap extends TableMap
+class LocationTableMap extends TableMap
 {
 
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'newshack.map.UserTableMap';
+    const CLASS_NAME = 'newshack.map.LocationTableMap';
 
     /**
      * Initialize the table attributes, columns and validators
@@ -32,16 +32,15 @@ class UserTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('user');
-        $this->setPhpName('User');
-        $this->setClassname('User');
+        $this->setName('location');
+        $this->setPhpName('Location');
+        $this->setClassname('Location');
         $this->setPackage('newshack');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('user_name', 'UserName', 'VARCHAR', true, 255, null);
-        $this->addColumn('password', 'Password', 'VARCHAR', true, 255, null);
-        $this->addColumn('salt', 'Salt', 'VARCHAR', true, 255, null);
+        $this->addColumn('area', 'Area', 'VARCHAR', true, 255, null);
+        $this->addForeignKey('user_id', 'UserId', 'INTEGER', 'user', 'id', true, null, null);
         // validators
     } // initialize()
 
@@ -50,8 +49,7 @@ class UserTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Keywords', 'Keywords', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), null, null, 'Keywordss');
-        $this->addRelation('Location', 'Location', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), null, null, 'Locations');
+        $this->addRelation('User', 'User', RelationMap::MANY_TO_ONE, array('user_id' => 'id', ), null, null);
     } // buildRelations()
 
-} // UserTableMap
+} // LocationTableMap

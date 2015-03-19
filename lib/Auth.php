@@ -53,4 +53,21 @@ class Auth {
     public function isLoggedIn() { 
         return $this->loggedIn;
     }
+    
+    public function getUserName() { 
+        return $this->username;
+    }
+    
+    public function registrationErrors($params) { 
+        if(UserQuery::create()->findOneByUserName($params['username']) != null) { 
+            return "This usernanme is already taken. ";
+        }
+        else if(strlen($params['password']) < 6) { 
+            return "Password needs to be at least 6 characters long. " . strlen($params['password']);
+        }
+        else if($params['password'] != $params['confirmpassword']) {
+            return "Passwords don't match. ";
+        }
+        return false;
+    }
 }

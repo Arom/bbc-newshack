@@ -6,4 +6,32 @@
         <column name="password" type="varchar" size="255" required="true"/>
         <column name="salt" type="varchar" size="255" required="true"/>
     </table>
+    
+    <table name="keywords"> 
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="name" type="varchar" size="255" required="true"/>
+        <column name="user_id" type="integer" required="true" />
+        <foreign-key foreignTable="user">
+            <reference local="user_id" foreign="id"/>
+        </foreign-key>
+        <column name="weight" type="integer" required="true" />
+    </table>
+    
+    <table name="news">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="title" type="varchar" size="10000" required="true"/>
+        <column name="content" type="varchar" size="10000" required="true"/>
+        <column name="short_content" type="varchar" size="10000" required="true"/>
+        <column name="keywords" type="varchar" size="10000" required="true"/>
+        <column name="location" type="varchar" size="10000" required="true"/>
+    </table>
+    
+    <table name="location">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="area" type="varchar" size="255" required="true"/>
+        <column name="user_id" type="integer" required="true" />
+        <foreign-key foreignTable="user">
+            <reference local="user_id" foreign="id"/>
+        </foreign-key>
+    </table>
 </database>
