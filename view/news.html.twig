@@ -1,0 +1,39 @@
+{% include 'header.html.twig' %}
+
+    {% if username is defined %}
+        Logged in as: <b>{{ username }}</b> [<a href="{{ siteUrl('user/logout') }}">logout</a>]
+    {% else %}
+        {% include 'login.html.twig' %}
+    {% endif %}
+
+  <div id="page" class="configurable index " data-story-id="front_page">
+    <div class="container" role="main">
+
+        <h1 class="index-title index-title--redundant index-title--front-page" id="comp-index-title" data-index-title-meta="{&quot;id&quot;:&quot;comp-index-title&quot;,&quot;type&quot;:&quot;index-title&quot;,&quot;handler&quot;:&quot;indexTitle&quot;,&quot;deviceGroups&quot;:null,&quot;opts&quot;:{&quot;alwaysVisible&quot;:false,&quot;onFrontPage&quot;:true},&quot;template&quot;:&quot;index-title&quot;}">BBC News Home</h1>
+
+        <div class="container--primary-and-secondary-columns column-clearfix">
+        </div>
+
+      <div class="column--single-bottom mt20">
+
+        {% include 'skylark.html.twig' %}
+
+        <div id="comp-digest-2" class="distinct-component-group ">
+          <div class="pukeko pukeko--8">
+
+          {% include 'pukeko.html.twig' %}
+          {% include 'pukeko.html.twig' %}
+          {% include 'pukeko.html.twig' %}
+          {% include 'pukeko.html.twig' %}
+          {% include 'pukeko.html.twig' %}
+          {% include 'pukeko.html.twig' %}
+          {% include 'pukeko.html.twig' %}
+          {% include 'pukeko.html.twig' %}
+
+          </div>
+
+        </div>
+      </div>
+
+
+{% include 'footer.html.twig' %}
