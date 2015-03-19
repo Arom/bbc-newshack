@@ -28,12 +28,19 @@ class NewsController extends Controller {
         
     }
     
-    function getNewsFromJson($json) {
-        $news = 1; 
+   function getNewsFromJson($json) {
+        $allNews = array();
+        
         foreach($json->hits as $hit){
-            echo $hit->description . "<br>";
+            $news = new News();
+            $news->setTitle($hit->title);
+            $news->setShortContent($hit->description);
+            $news->setContent($hit->body);
+            $news->setImage($hit->image);
+            $news->setUrl($hit->url);
+            array_push($allNews, $news);
         }
-        return $news;
+        return $allNews;
     }
     
 }
