@@ -12,12 +12,8 @@ class MusicEventsController extends Controller{
         $events = JSONRequester::parseJSONFromURL(
                 "http://ws.audioscrobbler.com/2.0/?method=geo.getevents&location=".$params['location']."&api_key=".$lastFMKey."&format=json"
                 );
-        var_dump($events);
-        foreach($events as $item){
-            for($i = 0; $i < sizeof($item); $i++) { 
-                $event = $item->event[$i];   
-                var_dump($event->title);
-            }
+        foreach($events->events->event as $item){
+            echo $item->title . "<br>";
         }
     }
 }
