@@ -39,6 +39,9 @@ DROP TABLE IF EXISTS [news];
 CREATE TABLE [news]
 (
     [id] INTEGER NOT NULL PRIMARY KEY,
+    [bbc_id] VARCHAR(50) NOT NULL,
+    [url] VARCHAR(255) NOT NULL,
+    [image] VARCHAR(255) NOT NULL,
     [title] VARCHAR(10000) NOT NULL,
     [content] VARCHAR(10000) NOT NULL,
     [short_content] VARCHAR(10000) NOT NULL,

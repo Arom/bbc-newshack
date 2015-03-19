@@ -24,16 +24,25 @@ abstract class BaseNewsPeer
     const TM_CLASS = 'NewsTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 6;
+    const NUM_COLUMNS = 9;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 6;
+    const NUM_HYDRATE_COLUMNS = 9;
 
     /** the column name for the id field */
     const ID = 'news.id';
+
+    /** the column name for the bbc_id field */
+    const BBC_ID = 'news.bbc_id';
+
+    /** the column name for the url field */
+    const URL = 'news.url';
+
+    /** the column name for the image field */
+    const IMAGE = 'news.image';
 
     /** the column name for the title field */
     const TITLE = 'news.title';
@@ -69,12 +78,12 @@ abstract class BaseNewsPeer
      * e.g. NewsPeer::$fieldNames[NewsPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'Title', 'Content', 'ShortContent', 'Keywords', 'Location', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'title', 'content', 'shortContent', 'keywords', 'location', ),
-        BasePeer::TYPE_COLNAME => array (NewsPeer::ID, NewsPeer::TITLE, NewsPeer::CONTENT, NewsPeer::SHORT_CONTENT, NewsPeer::KEYWORDS, NewsPeer::LOCATION, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TITLE', 'CONTENT', 'SHORT_CONTENT', 'KEYWORDS', 'LOCATION', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'title', 'content', 'short_content', 'keywords', 'location', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
+        BasePeer::TYPE_PHPNAME => array ('Id', 'BbcId', 'Url', 'Image', 'Title', 'Content', 'ShortContent', 'Keywords', 'Location', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'bbcId', 'url', 'image', 'title', 'content', 'shortContent', 'keywords', 'location', ),
+        BasePeer::TYPE_COLNAME => array (NewsPeer::ID, NewsPeer::BBC_ID, NewsPeer::URL, NewsPeer::IMAGE, NewsPeer::TITLE, NewsPeer::CONTENT, NewsPeer::SHORT_CONTENT, NewsPeer::KEYWORDS, NewsPeer::LOCATION, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'BBC_ID', 'URL', 'IMAGE', 'TITLE', 'CONTENT', 'SHORT_CONTENT', 'KEYWORDS', 'LOCATION', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'bbc_id', 'url', 'image', 'title', 'content', 'short_content', 'keywords', 'location', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
     );
 
     /**
@@ -84,12 +93,12 @@ abstract class BaseNewsPeer
      * e.g. NewsPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Title' => 1, 'Content' => 2, 'ShortContent' => 3, 'Keywords' => 4, 'Location' => 5, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'title' => 1, 'content' => 2, 'shortContent' => 3, 'keywords' => 4, 'location' => 5, ),
-        BasePeer::TYPE_COLNAME => array (NewsPeer::ID => 0, NewsPeer::TITLE => 1, NewsPeer::CONTENT => 2, NewsPeer::SHORT_CONTENT => 3, NewsPeer::KEYWORDS => 4, NewsPeer::LOCATION => 5, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TITLE' => 1, 'CONTENT' => 2, 'SHORT_CONTENT' => 3, 'KEYWORDS' => 4, 'LOCATION' => 5, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'title' => 1, 'content' => 2, 'short_content' => 3, 'keywords' => 4, 'location' => 5, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'BbcId' => 1, 'Url' => 2, 'Image' => 3, 'Title' => 4, 'Content' => 5, 'ShortContent' => 6, 'Keywords' => 7, 'Location' => 8, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'bbcId' => 1, 'url' => 2, 'image' => 3, 'title' => 4, 'content' => 5, 'shortContent' => 6, 'keywords' => 7, 'location' => 8, ),
+        BasePeer::TYPE_COLNAME => array (NewsPeer::ID => 0, NewsPeer::BBC_ID => 1, NewsPeer::URL => 2, NewsPeer::IMAGE => 3, NewsPeer::TITLE => 4, NewsPeer::CONTENT => 5, NewsPeer::SHORT_CONTENT => 6, NewsPeer::KEYWORDS => 7, NewsPeer::LOCATION => 8, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'BBC_ID' => 1, 'URL' => 2, 'IMAGE' => 3, 'TITLE' => 4, 'CONTENT' => 5, 'SHORT_CONTENT' => 6, 'KEYWORDS' => 7, 'LOCATION' => 8, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'bbc_id' => 1, 'url' => 2, 'image' => 3, 'title' => 4, 'content' => 5, 'short_content' => 6, 'keywords' => 7, 'location' => 8, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
     );
 
     /**
@@ -164,6 +173,9 @@ abstract class BaseNewsPeer
     {
         if (null === $alias) {
             $criteria->addSelectColumn(NewsPeer::ID);
+            $criteria->addSelectColumn(NewsPeer::BBC_ID);
+            $criteria->addSelectColumn(NewsPeer::URL);
+            $criteria->addSelectColumn(NewsPeer::IMAGE);
             $criteria->addSelectColumn(NewsPeer::TITLE);
             $criteria->addSelectColumn(NewsPeer::CONTENT);
             $criteria->addSelectColumn(NewsPeer::SHORT_CONTENT);
@@ -171,6 +183,9 @@ abstract class BaseNewsPeer
             $criteria->addSelectColumn(NewsPeer::LOCATION);
         } else {
             $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.bbc_id');
+            $criteria->addSelectColumn($alias . '.url');
+            $criteria->addSelectColumn($alias . '.image');
             $criteria->addSelectColumn($alias . '.title');
             $criteria->addSelectColumn($alias . '.content');
             $criteria->addSelectColumn($alias . '.short_content');
