@@ -20,17 +20,13 @@ class UserController extends Controller {
     public function loginAction($params) { 
         $auth = Auth::getInstance();
         
-        $user = UserQuery::create()->findOneByUserName($params['username']); 
-        if($user != null) { 
-            $passwordHash = $auth->hashPassword($params['password'], $user->getSalt()); 
-            if($passwordHash == $user->getPassword()) { 
-                $auth->saveSession($params['username'], $params['password']);
-                die('t');
-                return true; 
-            }
+        if($auth->authenticate($params['username'], $params['password'])) { 
+            $auth->saveSession($params['username'], $params['password']);
+            echo "logged in";
         }
-        die('f');
-        return false; 
+        else { 
+            echo "not logged in";
+        }
     }
     
     public function logoutAction($params) { 

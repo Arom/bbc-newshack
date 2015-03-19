@@ -39,6 +39,17 @@ class Auth {
         return substr(md5(rand()), 0, 7);
     }
     
+    public function authenticate($username, $password) { 
+        $user = UserQuery::create()->findOneByUserName($username); 
+        if($user != null) { 
+            $passwordHash = $this->hashPassword($password, $user->getSalt()); 
+            if($passwordHash == $user->getPassword()) { 
+                return true; 
+            }
+        }
+        return false; 
+    }
+    
     public function isLoggedIn() { 
         return $this->loggedIn;
     }
