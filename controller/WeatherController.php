@@ -12,8 +12,9 @@ class WeatherController extends Controller {
             
             $weather = JSONRequester::parseJSONFromURL
                             ("http://weather-api-proxy.cloud.bbc.co.uk/weather/feeds/en/" . $params['id'] . "/3hourlyforecast.json");
-            
+            $counter = 1;
             foreach ($weather->forecastContent->forecasts as $forecast) {
+                $counter++;
                 $container = array();
                 $container['day'] = $forecast->dayName;
                 $container['date'] = $this->getDate($forecast);
@@ -26,6 +27,7 @@ class WeatherController extends Controller {
                 array_push($p, $container);
             }
             
+            $p['counter'] = $counter;
             $this->renderHTML('weather.html.twig');
         }
     }
