@@ -4,6 +4,8 @@ class Controller {
     protected $method = "get"; 
     protected $slim = null;
     protected $db = null; 
+    protected $apiKey = "&apikey=YB0MY3VMHyllzPqEf5alVj5bUvGpvDVi";
+    protected $baseUrl = "http://data.test.bbc.co.uk/bbcrd-juicer/articles?";
     
     public function __construct() {
         $this->slim = Slim\Slim::getInstance();

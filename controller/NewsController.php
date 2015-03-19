@@ -16,12 +16,23 @@ class NewsController extends Controller {
     }
     
     function getNewsByKeywordAction($params) {
-        $jsonData = JSONRequester::parseJSONFromURL($this->baseUrl . $params['k'] . $this->apiKey);
+        $jsonData = JSONRequester::parseJSONFromURL($this->baseUrl . "q=" . $params['k'] . $this->apiKey);
+        $news = $this->getNewsFromJson($jsonData);
         
+    }
+    
+    function getSimilarNewsAction($params) {
+        $jsonData = JSONRequester::parseJSONFromURL($this->baseUrl . "like-ids[]=" . $params['id'] . $this->apiKey);
+        $news = $this->getNewsFromJson($jsonData);
+        
+    }
+    
+    function getNewsFromJson($json) {
+        $news = 1; 
         foreach($jsonData->hits as $hit){
             echo $hit->description . "<br>";
         }
-        
+        return $news;
     }
     
 }
