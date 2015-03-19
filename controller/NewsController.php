@@ -21,6 +21,7 @@ class NewsController extends Controller {
         
     }
     
+    // example id: c8e9bf17ec9494fed5c7071b90c119d76ab8ffbe
     function getSimilarNewsAction($params) {
         $jsonData = JSONRequester::parseJSONFromURL($this->apiBaseUrl . "like-ids[]=" . $params['id'] . $this->apiKey);
         $news = $this->getNewsFromJson($jsonData);
@@ -29,7 +30,7 @@ class NewsController extends Controller {
     
     function getNewsFromJson($json) {
         $news = 1; 
-        foreach($jsonData->hits as $hit){
+        foreach($json->hits as $hit){
             echo $hit->description . "<br>";
         }
         return $news;
