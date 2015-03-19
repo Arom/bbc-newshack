@@ -19,6 +19,9 @@
     
     <table name="news">
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="bbc_id" type="varchar" size="50" required="true"/>
+        <column name="url" type="varchar" size="255" required="true"/>
+        <column name="image" type="varchar" size="255" required="true"/>
         <column name="title" type="varchar" size="10000" required="true"/>
         <column name="content" type="varchar" size="10000" required="true"/>
         <column name="short_content" type="varchar" size="10000" required="true"/>

@@ -7,6 +7,9 @@
  *
  *
  * @method NewsQuery orderById($order = Criteria::ASC) Order by the id column
+ * @method NewsQuery orderByBbcId($order = Criteria::ASC) Order by the bbc_id column
+ * @method NewsQuery orderByUrl($order = Criteria::ASC) Order by the url column
+ * @method NewsQuery orderByImage($order = Criteria::ASC) Order by the image column
  * @method NewsQuery orderByTitle($order = Criteria::ASC) Order by the title column
  * @method NewsQuery orderByContent($order = Criteria::ASC) Order by the content column
  * @method NewsQuery orderByShortContent($order = Criteria::ASC) Order by the short_content column
@@ -14,6 +17,9 @@
  * @method NewsQuery orderByLocation($order = Criteria::ASC) Order by the location column
  *
  * @method NewsQuery groupById() Group by the id column
+ * @method NewsQuery groupByBbcId() Group by the bbc_id column
+ * @method NewsQuery groupByUrl() Group by the url column
+ * @method NewsQuery groupByImage() Group by the image column
  * @method NewsQuery groupByTitle() Group by the title column
  * @method NewsQuery groupByContent() Group by the content column
  * @method NewsQuery groupByShortContent() Group by the short_content column
@@ -27,6 +33,9 @@
  * @method News findOne(PropelPDO $con = null) Return the first News matching the query
  * @method News findOneOrCreate(PropelPDO $con = null) Return the first News matching the query, or a new News object populated from the query conditions when no match is found
  *
+ * @method News findOneByBbcId(string $bbc_id) Return the first News filtered by the bbc_id column
+ * @method News findOneByUrl(string $url) Return the first News filtered by the url column
+ * @method News findOneByImage(string $image) Return the first News filtered by the image column
  * @method News findOneByTitle(string $title) Return the first News filtered by the title column
  * @method News findOneByContent(string $content) Return the first News filtered by the content column
  * @method News findOneByShortContent(string $short_content) Return the first News filtered by the short_content column
@@ -34,6 +43,9 @@
  * @method News findOneByLocation(string $location) Return the first News filtered by the location column
  *
  * @method array findById(int $id) Return News objects filtered by the id column
+ * @method array findByBbcId(string $bbc_id) Return News objects filtered by the bbc_id column
+ * @method array findByUrl(string $url) Return News objects filtered by the url column
+ * @method array findByImage(string $image) Return News objects filtered by the image column
  * @method array findByTitle(string $title) Return News objects filtered by the title column
  * @method array findByContent(string $content) Return News objects filtered by the content column
  * @method array findByShortContent(string $short_content) Return News objects filtered by the short_content column
@@ -146,7 +158,7 @@ abstract class BaseNewsQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT [id], [title], [content], [short_content], [keywords], [location] FROM [news] WHERE [id] = :p0';
+        $sql = 'SELECT [id], [bbc_id], [url], [image], [title], [content], [short_content], [keywords], [location] FROM [news] WHERE [id] = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -275,6 +287,93 @@ abstract class BaseNewsQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(NewsPeer::ID, $id, $comparison);
+    }
+
+    /**
+     * Filter the query on the bbc_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByBbcId('fooValue');   // WHERE bbc_id = 'fooValue'
+     * $query->filterByBbcId('%fooValue%'); // WHERE bbc_id LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $bbcId The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return NewsQuery The current query, for fluid interface
+     */
+    public function filterByBbcId($bbcId = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($bbcId)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $bbcId)) {
+                $bbcId = str_replace('*', '%', $bbcId);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(NewsPeer::BBC_ID, $bbcId, $comparison);
+    }
+
+    /**
+     * Filter the query on the url column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByUrl('fooValue');   // WHERE url = 'fooValue'
+     * $query->filterByUrl('%fooValue%'); // WHERE url LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $url The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return NewsQuery The current query, for fluid interface
+     */
+    public function filterByUrl($url = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($url)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $url)) {
+                $url = str_replace('*', '%', $url);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(NewsPeer::URL, $url, $comparison);
+    }
+
+    /**
+     * Filter the query on the image column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByImage('fooValue');   // WHERE image = 'fooValue'
+     * $query->filterByImage('%fooValue%'); // WHERE image LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $image The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return NewsQuery The current query, for fluid interface
+     */
+    public function filterByImage($image = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($image)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $image)) {
+                $image = str_replace('*', '%', $image);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(NewsPeer::IMAGE, $image, $comparison);
     }
 
     /**

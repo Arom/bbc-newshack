@@ -36,6 +36,24 @@ abstract class BaseNews extends BaseObject implements Persistent
     protected $id;
 
     /**
+     * The value for the bbc_id field.
+     * @var        string
+     */
+    protected $bbc_id;
+
+    /**
+     * The value for the url field.
+     * @var        string
+     */
+    protected $url;
+
+    /**
+     * The value for the image field.
+     * @var        string
+     */
+    protected $image;
+
+    /**
      * The value for the title field.
      * @var        string
      */
@@ -94,6 +112,39 @@ abstract class BaseNews extends BaseObject implements Persistent
     {
 
         return $this->id;
+    }
+
+    /**
+     * Get the [bbc_id] column value.
+     *
+     * @return string
+     */
+    public function getBbcId()
+    {
+
+        return $this->bbc_id;
+    }
+
+    /**
+     * Get the [url] column value.
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+
+        return $this->url;
+    }
+
+    /**
+     * Get the [image] column value.
+     *
+     * @return string
+     */
+    public function getImage()
+    {
+
+        return $this->image;
     }
 
     /**
@@ -171,6 +222,69 @@ abstract class BaseNews extends BaseObject implements Persistent
 
         return $this;
     } // setId()
+
+    /**
+     * Set the value of [bbc_id] column.
+     *
+     * @param  string $v new value
+     * @return News The current object (for fluent API support)
+     */
+    public function setBbcId($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->bbc_id !== $v) {
+            $this->bbc_id = $v;
+            $this->modifiedColumns[] = NewsPeer::BBC_ID;
+        }
+
+
+        return $this;
+    } // setBbcId()
+
+    /**
+     * Set the value of [url] column.
+     *
+     * @param  string $v new value
+     * @return News The current object (for fluent API support)
+     */
+    public function setUrl($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->url !== $v) {
+            $this->url = $v;
+            $this->modifiedColumns[] = NewsPeer::URL;
+        }
+
+
+        return $this;
+    } // setUrl()
+
+    /**
+     * Set the value of [image] column.
+     *
+     * @param  string $v new value
+     * @return News The current object (for fluent API support)
+     */
+    public function setImage($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->image !== $v) {
+            $this->image = $v;
+            $this->modifiedColumns[] = NewsPeer::IMAGE;
+        }
+
+
+        return $this;
+    } // setImage()
 
     /**
      * Set the value of [title] column.
@@ -310,11 +424,14 @@ abstract class BaseNews extends BaseObject implements Persistent
         try {
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-            $this->title = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->content = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
-            $this->short_content = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
-            $this->keywords = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-            $this->location = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+            $this->bbc_id = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
+            $this->url = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+            $this->image = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
+            $this->title = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
+            $this->content = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+            $this->short_content = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
+            $this->keywords = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
+            $this->location = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -324,7 +441,7 @@ abstract class BaseNews extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 6; // 6 = NewsPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 9; // 9 = NewsPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating News object", $e);
@@ -539,6 +656,15 @@ abstract class BaseNews extends BaseObject implements Persistent
         if ($this->isColumnModified(NewsPeer::ID)) {
             $modifiedColumns[':p' . $index++]  = '[id]';
         }
+        if ($this->isColumnModified(NewsPeer::BBC_ID)) {
+            $modifiedColumns[':p' . $index++]  = '[bbc_id]';
+        }
+        if ($this->isColumnModified(NewsPeer::URL)) {
+            $modifiedColumns[':p' . $index++]  = '[url]';
+        }
+        if ($this->isColumnModified(NewsPeer::IMAGE)) {
+            $modifiedColumns[':p' . $index++]  = '[image]';
+        }
         if ($this->isColumnModified(NewsPeer::TITLE)) {
             $modifiedColumns[':p' . $index++]  = '[title]';
         }
@@ -567,6 +693,15 @@ abstract class BaseNews extends BaseObject implements Persistent
                 switch ($columnName) {
                     case '[id]':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
+                        break;
+                    case '[bbc_id]':
+                        $stmt->bindValue($identifier, $this->bbc_id, PDO::PARAM_STR);
+                        break;
+                    case '[url]':
+                        $stmt->bindValue($identifier, $this->url, PDO::PARAM_STR);
+                        break;
+                    case '[image]':
+                        $stmt->bindValue($identifier, $this->image, PDO::PARAM_STR);
                         break;
                     case '[title]':
                         $stmt->bindValue($identifier, $this->title, PDO::PARAM_STR);
@@ -721,18 +856,27 @@ abstract class BaseNews extends BaseObject implements Persistent
                 return $this->getId();
                 break;
             case 1:
-                return $this->getTitle();
+                return $this->getBbcId();
                 break;
             case 2:
-                return $this->getContent();
+                return $this->getUrl();
                 break;
             case 3:
-                return $this->getShortContent();
+                return $this->getImage();
                 break;
             case 4:
-                return $this->getKeywords();
+                return $this->getTitle();
                 break;
             case 5:
+                return $this->getContent();
+                break;
+            case 6:
+                return $this->getShortContent();
+                break;
+            case 7:
+                return $this->getKeywords();
+                break;
+            case 8:
                 return $this->getLocation();
                 break;
             default:
@@ -764,11 +908,14 @@ abstract class BaseNews extends BaseObject implements Persistent
         $keys = NewsPeer::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getTitle(),
-            $keys[2] => $this->getContent(),
-            $keys[3] => $this->getShortContent(),
-            $keys[4] => $this->getKeywords(),
-            $keys[5] => $this->getLocation(),
+            $keys[1] => $this->getBbcId(),
+            $keys[2] => $this->getUrl(),
+            $keys[3] => $this->getImage(),
+            $keys[4] => $this->getTitle(),
+            $keys[5] => $this->getContent(),
+            $keys[6] => $this->getShortContent(),
+            $keys[7] => $this->getKeywords(),
+            $keys[8] => $this->getLocation(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -812,18 +959,27 @@ abstract class BaseNews extends BaseObject implements Persistent
                 $this->setId($value);
                 break;
             case 1:
-                $this->setTitle($value);
+                $this->setBbcId($value);
                 break;
             case 2:
-                $this->setContent($value);
+                $this->setUrl($value);
                 break;
             case 3:
-                $this->setShortContent($value);
+                $this->setImage($value);
                 break;
             case 4:
-                $this->setKeywords($value);
+                $this->setTitle($value);
                 break;
             case 5:
+                $this->setContent($value);
+                break;
+            case 6:
+                $this->setShortContent($value);
+                break;
+            case 7:
+                $this->setKeywords($value);
+                break;
+            case 8:
                 $this->setLocation($value);
                 break;
         } // switch()
@@ -851,11 +1007,14 @@ abstract class BaseNews extends BaseObject implements Persistent
         $keys = NewsPeer::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setTitle($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setContent($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setShortContent($arr[$keys[3]]);
-        if (array_key_exists($keys[4], $arr)) $this->setKeywords($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setLocation($arr[$keys[5]]);
+        if (array_key_exists($keys[1], $arr)) $this->setBbcId($arr[$keys[1]]);
+        if (array_key_exists($keys[2], $arr)) $this->setUrl($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setImage($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setTitle($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setContent($arr[$keys[5]]);
+        if (array_key_exists($keys[6], $arr)) $this->setShortContent($arr[$keys[6]]);
+        if (array_key_exists($keys[7], $arr)) $this->setKeywords($arr[$keys[7]]);
+        if (array_key_exists($keys[8], $arr)) $this->setLocation($arr[$keys[8]]);
     }
 
     /**
@@ -868,6 +1027,9 @@ abstract class BaseNews extends BaseObject implements Persistent
         $criteria = new Criteria(NewsPeer::DATABASE_NAME);
 
         if ($this->isColumnModified(NewsPeer::ID)) $criteria->add(NewsPeer::ID, $this->id);
+        if ($this->isColumnModified(NewsPeer::BBC_ID)) $criteria->add(NewsPeer::BBC_ID, $this->bbc_id);
+        if ($this->isColumnModified(NewsPeer::URL)) $criteria->add(NewsPeer::URL, $this->url);
+        if ($this->isColumnModified(NewsPeer::IMAGE)) $criteria->add(NewsPeer::IMAGE, $this->image);
         if ($this->isColumnModified(NewsPeer::TITLE)) $criteria->add(NewsPeer::TITLE, $this->title);
         if ($this->isColumnModified(NewsPeer::CONTENT)) $criteria->add(NewsPeer::CONTENT, $this->content);
         if ($this->isColumnModified(NewsPeer::SHORT_CONTENT)) $criteria->add(NewsPeer::SHORT_CONTENT, $this->short_content);
@@ -936,6 +1098,9 @@ abstract class BaseNews extends BaseObject implements Persistent
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
+        $copyObj->setBbcId($this->getBbcId());
+        $copyObj->setUrl($this->getUrl());
+        $copyObj->setImage($this->getImage());
         $copyObj->setTitle($this->getTitle());
         $copyObj->setContent($this->getContent());
         $copyObj->setShortContent($this->getShortContent());
@@ -993,6 +1158,9 @@ abstract class BaseNews extends BaseObject implements Persistent
     public function clear()
     {
         $this->id = null;
+        $this->bbc_id = null;
+        $this->url = null;
+        $this->image = null;
         $this->title = null;
         $this->content = null;
         $this->short_content = null;

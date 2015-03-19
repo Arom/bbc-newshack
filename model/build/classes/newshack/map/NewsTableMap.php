@@ -39,6 +39,9 @@ class NewsTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addColumn('bbc_id', 'BbcId', 'VARCHAR', true, 50, null);
+        $this->addColumn('url', 'Url', 'VARCHAR', true, 255, null);
+        $this->addColumn('image', 'Image', 'VARCHAR', true, 255, null);
         $this->addColumn('title', 'Title', 'VARCHAR', true, 10000, null);
         $this->addColumn('content', 'Content', 'VARCHAR', true, 10000, null);
         $this->addColumn('short_content', 'ShortContent', 'VARCHAR', true, 10000, null);
