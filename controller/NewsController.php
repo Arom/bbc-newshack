@@ -16,23 +16,23 @@ class NewsController extends Controller {
     }
     
     function getNewsByKeywordAction($params) {
-        $jsonData = JSONRequester::parseJSONFromURL($this->apiBaseUrl. "q=" . $params['k'] . $this->apiKey);
+        $jsonData = JSONRequester::parseJSONFromURL($this->apiBaseUrl. "q=" . $params['k'] . '&apikey=' . $this->apiKey);
         $news = $this->getNewsFromJson($jsonData);
         
         // tutja jakies wywalanie do htmla chyba bedzie
         foreach ( $news as $n) {
-            echo($n->title . "\n" . $n.getShortContent . "\n\n");
+            echo($n->getTitle() . "\n" . $n->getShortContent() . "\n\n");
         }
     }
     
     // example id: c8e9bf17ec9494fed5c7071b90c119d76ab8ffbe
     function getSimilarNewsAction($params) {
-        $jsonData = JSONRequester::parseJSONFromURL($this->apiBaseUrl . "like-ids[]=" . $params['id'] . $this->apiKey);
+        $jsonData = JSONRequester::parseJSONFromURL($this->apiBaseUrl . "like-ids[]=" . $params['id'] . '&apikey=' . $this->apiKey);
         $news = $this->getNewsFromJson($jsonData);
         
         // tutja jakies wywalanie do htmla chyba bedzie
         foreach ( $news as $n) {
-            echo($n->title . "\n" . $n.getShortContent . "\n\n");
+            echo($n->getTitle() . "\n" . $n->getShortContent() . "\n\n");
         }
     }
     
