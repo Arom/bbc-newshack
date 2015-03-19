@@ -2,17 +2,19 @@
   <div class="skylark-item" data-entityid="featured-site-top-stories#1">
     <div class="skylark__image">
       <div class="responsive-image responsive-image--16by9">
-        <img src="http://ichef.bbci.co.uk/news/375/media/images/81764000/jpg/_81764266_harrykane.jpg" datasrc="http://ichef.bbci.co.uk/news/200/media/images/81764000/jpg/_81764266_harrykane.jpg" class="js-image-replace" alt="Harry Kane" width="624" height="351">
+        <img src="{{ data.getImage() }}"
+        datasrc="{{ data.getImage() }}"
+        class="js-image-replace" alt="Harry Kane" width="624" height="351">
       </div>
     </div>
-    <a href="/sport/football/31962347" class="title-link">
+    <a href="{{ data.getUrl() }}" class="title-link">
       <h3 class="title-link__title">
         <span class="icon sport">Sport</span>
-        <span class="title-link__title-text">Kane earns first England call-up</span>
+        <span class="title-link__title-text">{{ data.getTitle() }}</span>
       </h3>
     </a>
     <div class="skylark__body">
-      <p class="skylark__summary">England manager Roy Hodgson names Tottenham striker Harry Kane in his squad to face Lithuania and Italy.</p>
+      <p class="skylark__summary">{{ data.getShortContent() }}</p>
       <div class="skylark__info-list">
         <ul class="mini-info-list">
           <li class="mini-info-list__item">
