@@ -1,0 +1,19 @@
+{% include 'header.html.twig' %}
+
+{% if registersuccess is defined %}
+    Your account has been registered. <a href="{{ siteUrl('home') }}">home</a>
+{% else %}
+
+    {% if registererror is defined %} 
+        {{ registererror }}
+    {% endif %}
+    <form method="post" action="{{ siteUrl('/user/register') }}">
+        <input type="text" name="username" placeholder="username">
+        <input type="password" name="password" placeholder="password">
+        <input type="password" name="confirmpassword" placeholder="confirm password">
+        <input type="submit" value="login">
+    </form>
+
+{% endif %}
+    
+{% include 'footer.html.twig' %}

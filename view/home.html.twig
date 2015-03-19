@@ -1,12 +1,9 @@
-<html>
-    <head>
-        <title>Newshack</title>
-    </head>
-    <body>
-        {% if username is defined %}
-            Logged in as: <b>{{ username }}</b> [<a href="{{ siteUrl('user/logout') }}">logout</a>]
-        {% else %}
-            {% include 'login.html.twig' %}
-        {% endif %} 
-    </body>
-</html>
+{% include 'header.html.twig' %}
+
+    {% if username is defined %}
+        Logged in as: <b>{{ username }}</b> [<a href="{{ siteUrl('user/logout') }}">logout</a>]
+    {% else %}
+        {% include 'login.html.twig' %}
+    {% endif %} 
+
+{% include 'footer.html.twig' %}
