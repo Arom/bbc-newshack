@@ -1,3 +1,23 @@
 {% include 'header.html.twig' %}
+<div class="container" id="top-boxes">
+    <div id="weather-box">
+        <div class="weather-left">
+            <img id="weatherIcon" src="" class="weather-icon">
+            <img id="windIcon" src="" class="weather-icon">
+        </div>
+        <div class="weather-right">
+            <p id="hour" class="weather-hour-location"></p>
+            <p id="temp" class="weather-temperature"></p>
 
+        </div>
+            <div style=" display:inline-block; width: 120px; float: right;">
+                            <p id="windSpeed" class="weather-wind-speed"></p>
+            <p id="visibility" class="weather-visibility"></p>
+            </div>
+    </div>
+    <div id="events-box">
+       {# <span id="eventTitle" class="event-title"></span>
+        <img src="" id="eventImage">#}
+    </div>
+</div>
 {% include 'footer.html.twig' %}

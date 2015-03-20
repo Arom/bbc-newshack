@@ -29,21 +29,51 @@
             type: "POST",
             url: "Location/findlocationidbycoordinates/lat:" + crd.latitude + ",long:" + crd.longitude,
             success: function(data) {
+          //      alert(data);
+                var location = JSON.parse(data);
+                var locationID;
+                var locationName;
+                location.forEach(function(locationItem){
+                  locationID = locationItem['id'];
+                  locationName = locationItem['name'];
+                });
+                $.ajax({
+                    type:"POST",
+                    url:"MusicEvents/getEventsByLocation/location:"+locationName+",genre:rock",
+                    success:function(data){
+                        var music = JSON.parse(data);
+                        //console.log(music);
+                        music.forEach(function(musicItem){
+                            document.getElementById("events-box").innerHTML+= "<span id=\"eventTitle\" class=\"event-title\">"+musicItem['title']+"</span> <br />";
+                            document.getElementById("events-box").innerHTML +=  "<img src="+musicItem['img']+" id=\"eventImage\"><br />";
+        console.log(musicItem['title']);
+                            console.log(musicItem['img']);
+                        });
+                    }
+                });
                $.ajax({
                    type:"POST",
-                   url:"Weather/threeHours/id:"+data,
+                   url:"Weather/threeHours/id:"+locationID,
                    success:function(data){
-                    //   console.log(data);
+                       
                        var weather = JSON.parse(data);
                        weather.forEach(function(weatherItem){
-                         //  console.log(weatherItem['time']);
+                           document.getElementById("weatherIcon").src = weatherItem['weatherIcon'];
+                           document.getElementById("windIcon").src = weatherItem['windIcon'];
+                    //       document.getElementById("hour").innerHTML = "<b>" + weatherItem['time'] + "</b> ";
+                           document.getElementById("temp").innerHTML = weatherItem['temp']+"&deg;C";
+                           document.getElementById("windSpeed").innerHTML = "Wind speed: " +weatherItem['windSpeed'] +"mph";
+                           document.getElementById("visibility").innerHTML = "Visibility: " +weatherItem['visibility'];
+                         //  console.log(weatherItem['weatherIcon']);
+                         //  console.log(weatherItem['windIcon']);
+                         // console.log(weatherItem['time']);
                          // weatherItem['type'];
-                         //weatherItem['temp']
-                         //weatherItem['windSpeed']
-                         //weatherItem['visibility']
-                       })
+                         // weatherItem['temp']
+                         // weatherItem['windSpeed']
+                         // weatherItem['visibility']
+                       });
                    }
-               })
+               });
             }
 
         });
