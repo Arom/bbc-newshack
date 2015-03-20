@@ -43,7 +43,7 @@
 
 #weather-box, #events-box {
     display: inline-block;
-    width: 47%;
+    width: 51%; 
     height: 100px;
     border: 1px solid #ccc;
     margin-top: 10px;
@@ -91,7 +91,7 @@
     float: right;
     overflow-y: scroll;
     height: 400px;
-    width: 30%;
+    width: 44%;
 }
 .weather-wind-speed{
     float:right;
