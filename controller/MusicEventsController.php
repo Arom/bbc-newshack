@@ -1,14 +1,15 @@
 <?php
+
 include_once 'Controller.php';
 include_once '../lib/JSONRequester.php';
-
 
 class MusicEventsController extends Controller {
 
     function defaultAction($params) {
         
     }
-   //Is event suitable for user taste?
+
+    //Is event suitable for user taste?
     function isEventOK($event, $genre) {
         $is = false;
         $eventArtists = $event->artists->artist;
@@ -26,42 +27,39 @@ class MusicEventsController extends Controller {
         }
         return $is;
     }
+
     //Displays available images for the events
-    function displayImg($event){
-        foreach($event->image as $img){
-            if($img->size == "extralarge"){
+    function getImg($event) {
+        foreach ($event->image as $img) {
+            if ($img->size == "extralarge") {
                 $img = (array) $img;
-               echo "<img src=".$img['#text']."> <br />";
+                return $img['#text'];
             }
         }
     }
+
     function getEventsByLocationAction($params) {
-    $lastFMKey = "876909ca137a1bee9bad357d6f066b0a";
+        $lastFMKey = "876909ca137a1bee9bad357d6f066b0a";
         //Get max of 30 events in 100km range of location
         $events = JSONRequester::parseJSONFromURL(
                         "http://ws.audioscrobbler.com/2.0/?method=geo.getevents&location=" . $params['location'] . "&api_key=" . $lastFMKey . "&distance=100&limit=30&format=json"
         );
-        echo "<h1> Matched Events </h1>";
+
+        $eventsArray = array();
         foreach ($events->events->event as $item) {
-                if ($this->isEventOK($item, $params['genre'])) {
-                    $this->displayImg($item);
-                    echo "Title: " . $item->title . "<br />";
-                    if (is_array($item->artists->artist)) {
-                        echo "Line up: ";
-                        foreach ($item->artists->artist as $artist) {
-                            echo $artist . " ";
-                        }
-                        echo "<br />";
-                    } else {
-                        echo "Artist : " . $item->artists->artist . " <br />";
-                    }
-                }
-            
+            if ($this->isEventOK($item, $params['genre'])) {
+                $eventItem = array();
+                $eventItem['img'] = $this->getImg($item);
+                $eventItem['title'] = $item->title;
+                array_push($eventsArray, $eventItem);
+            }
         }
+        echo json_encode($eventsArray);
     }
+
     //Artist contains appropriate genre tags?
     function isArtistInGenre($findGenre, $artist) {
-            $lastFMKey = "876909ca137a1bee9bad357d6f066b0a";
+        $lastFMKey = "876909ca137a1bee9bad357d6f066b0a";
 
         $is = false;
         $tags = JSONRequester::parseJSONFromURL(""

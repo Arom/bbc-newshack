@@ -22,16 +22,20 @@ class LocationController extends Controller {
 
     function findLocationIDByCoordinatesAction($params) {
         if ($this->method == "post") {
+            $locationArray = array();
             $place = JSONRequester::parseJSONFromURL
                             ("http://data.bbc.co.uk/locservices-locator/locations?apikey="
                             . $this->apiKey . "&vv=2&format=json&order=importance&filter=domestic&longitude="
                             . $params['long']
                             . "&latitude=" . $params['lat']);
             foreach ($place->response->content->locations->locations as $location) {
-                $placeName = $location->id;
+                $oneLocation = array();
+                $oneLocation['id'] = $location->id;
+                $oneLocation['name'] = $location->name;
+                array_push($locationArray, $oneLocation);
                 break;
             }
-            echo $placeName;
+            echo json_encode($locationArray);
         }
     }
 

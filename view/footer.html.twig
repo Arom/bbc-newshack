@@ -29,21 +29,41 @@
             type: "POST",
             url: "Location/findlocationidbycoordinates/lat:" + crd.latitude + ",long:" + crd.longitude,
             success: function(data) {
+          //      alert(data);
+                var location = JSON.parse(data);
+                var locationID;
+                var locationName;
+                location.forEach(function(locationItem){
+                   locationID = locationItem['id'];
+                  locationName = locationItem['name'];
+                });
+                $.ajax({
+                    type:"POST",
+                    url:"MusicEvents/getEventsByLocation/location:Aberystwyth,genre:rock",
+                    success:function(data){
+                        var music = JSON.parse(data);
+                        console.log(music);
+                        music.forEach(function(musicItem){
+                            console.log(musicItem['title']);
+                            console.log(musicItem['img']);
+                        });
+                    }
+                });
                $.ajax({
                    type:"POST",
-                   url:"Weather/threeHours/id:"+data,
+                   url:"Weather/threeHours/id:"+locationID,
                    success:function(data){
-                    //   console.log(data);
+                       
                        var weather = JSON.parse(data);
                        weather.forEach(function(weatherItem){
-                         //  console.log(weatherItem['time']);
+                         // console.log(weatherItem['time']);
                          // weatherItem['type'];
-                         //weatherItem['temp']
-                         //weatherItem['windSpeed']
-                         //weatherItem['visibility']
-                       })
+                         // weatherItem['temp']
+                         // weatherItem['windSpeed']
+                         // weatherItem['visibility']
+                       });
                    }
-               })
+               });
             }
 
         });
