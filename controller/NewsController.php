@@ -13,12 +13,24 @@ class NewsController extends Controller {
 
     function defaultAction($params) {
       $p = array();
-      $p['news_data'] = $this->getNewsByKey("kitten");
+      $p['news_data'] = $this->getNewsByKeywords(array("technology", "science", "gaming", "kitten"));
       $this->renderHTML('news.html.twig', $p);
     }
 
     function getNewsByKey($keyword) {
         $jsonData = JSONRequester::parseJSONFromURL($this->apiBaseUrl. "q=" . $keyword . '&apikey=' . $this->apiKey);
+        return $this->getNewsFromJson($jsonData);
+    }
+
+    function getNewsByKeywords($keywords) {
+
+        $query = "";
+        for($i = 0; $i < count($keywords) -1; $i++ ){
+          $query = $query . $keywords[$i] . " OR ";
+        }
+        $query = $query . $keywords[count($keywords) - 1];
+
+        $jsonData = JSONRequester::parseJSONFromURL($this->apiBaseUrl. "q=" . urlencode($query) . '&apikey=' . $this->apiKey);
         return $this->getNewsFromJson($jsonData);
     }
 
@@ -39,19 +51,17 @@ class NewsController extends Controller {
         $allNews = array();
 
         foreach($json->hits as $hit){
+
+          if (!is_null($hit->image) && !$hit->image == "") {
             $news = new News();
             $news->setTitle($hit->title);
             $news->setShortContent($hit->description);
             $news->setContent($hit->body);
-
-            if (is_null($hit->image) || $hit->image == "") {
-                $news->setImage("https://newevolutiondesigns.com/images/freebies/cat-wallpaper-2.jpg");
-            } else {
-                $news->setImage($hit->image);
-            }
-
+            $news->setImage($hit->image);
             $news->setUrl($hit->url);
             array_push($allNews, $news);
+          }
+
         }
         return $allNews;
     }

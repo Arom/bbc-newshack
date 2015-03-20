@@ -15,7 +15,7 @@
         <div id="comp-digest-2" class="distinct-component-group ">
           <div class="pukeko pukeko--8">
 
-          {% for i in 0..10 %}
+          {% for i in 1..news_data|length-1 %}
 
             {% include 'pukeko.html.twig' with {'data' : news_data[i]} %}
 
