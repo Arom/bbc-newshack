@@ -42,7 +42,7 @@
                     url:"MusicEvents/getEventsByLocation/location:"+locationName+",genre:rock",
                     success:function(data){
                         var music = JSON.parse(data);
-                        console.log(music);
+                        //console.log(music);
                         music.forEach(function(musicItem){
                             console.log(musicItem['title']);
                             console.log(musicItem['img']);
@@ -56,6 +56,12 @@
                        
                        var weather = JSON.parse(data);
                        weather.forEach(function(weatherItem){
+                           document.getElementById("weatherIcon").src = weatherItem['weatherIcon'];
+                           document.getElementById("windIcon").src = weatherItem['windIcon'];
+                    //       document.getElementById("hour").innerHTML = "<b>" + weatherItem['time'] + "</b> ";
+                           document.getElementById("temp").innerHTML = weatherItem['temp']+"&deg;C";
+                           document.getElementById("windSpeed").innerHTML = "Wind speed: " +weatherItem['windSpeed'] +"mph";
+                           document.getElementById("visibility").innerHTML = "Visibility: " +weatherItem['visibility'];
                          //  console.log(weatherItem['weatherIcon']);
                          //  console.log(weatherItem['windIcon']);
                          // console.log(weatherItem['time']);
