@@ -15,10 +15,24 @@ class LocationController extends Controller {
         $place = JSONRequester::parseJSONFromURL
                         ("http://data.bbc.co.uk/locservices-locator/locations?apikey="
                         . $this->apiKey . "&vv=2&format=json&order=importance&filter=domestic&search=" . $params['placename']);
-        foreach($place->response->content->locations->locations as $location){
-            echo $location->name. " <br />";
+        foreach ($place->response->content->locations->locations as $location) {
+            echo $location->name . " <br />";
         }
-       
+    }
+
+    function findLocationIDByCoordinatesAction($params) {
+        if ($this->method == "post") {
+            $place = JSONRequester::parseJSONFromURL
+                            ("http://data.bbc.co.uk/locservices-locator/locations?apikey="
+                            . $this->apiKey . "&vv=2&format=json&order=importance&filter=domestic&longitude="
+                            . $params['long']
+                            . "&latitude=" . $params['lat']);
+            foreach ($place->response->content->locations->locations as $location) {
+                $placeName = $location->id;
+                break;
+            }
+            echo $placeName;
+        }
     }
 
     function findLocationByCoordinatesAction($params) {
@@ -28,7 +42,8 @@ class LocationController extends Controller {
                         . $params['long']
                         . "&latitude=" . $params['lat']);
         foreach ($place->response->content->locations->locations as $location) {
-            echo $location->name . " <br />";
+            $placeName = $location->name;
+            break;
             //Available info $location-> ;
 //            id:
 //            name:
@@ -42,6 +57,7 @@ class LocationController extends Controller {
 //            distance
 //            isWithinContext: bool
         }
+        return $placeName;
     }
 
 }
