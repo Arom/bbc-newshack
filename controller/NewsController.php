@@ -13,7 +13,7 @@ class NewsController extends Controller {
 
     function defaultAction($params) {
       $p = array();
-      $p['news_data'] = $this->getNewsByKey("cat");
+      $p['news_data'] = $this->getNewsByKey("kitten");
       $this->renderHTML('news.html.twig', $p);
     }
 
@@ -43,7 +43,7 @@ class NewsController extends Controller {
             $news->setTitle($hit->title);
             $news->setShortContent($hit->description);
             $news->setContent($hit->body);
-            
+
             if (is_null($hit->image)) {
                 $news->setImage("https://newevolutiondesigns.com/images/freebies/cat-wallpaper-2.jpg");
             } else {
