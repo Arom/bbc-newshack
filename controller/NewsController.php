@@ -17,6 +17,7 @@ class NewsController extends Controller {
       $this->renderHTML('news.html.twig', $p);
     }
 
+
     function getNewsByKey($keyword) {
         $jsonData = JSONRequester::parseJSONFromURL($this->apiBaseUrl. "q=" . $keyword . '&apikey=' . $this->apiKey);
         return $this->getNewsFromJson($jsonData);
