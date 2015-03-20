@@ -33,9 +33,15 @@
                    type:"POST",
                    url:"Weather/threeHours/id:"+data,
                    success:function(data){
-                       var weather = $.getJSON(data);
-                       
-                       
+                    //   console.log(data);
+                       var weather = JSON.parse(data);
+                       weather.forEach(function(weatherItem){
+                         //  console.log(weatherItem['time']);
+                         // weatherItem['type'];
+                         //weatherItem['temp']
+                         //weatherItem['windSpeed']
+                         //weatherItem['visibility']
+                       })
                    }
                })
             }

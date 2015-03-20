@@ -49,18 +49,8 @@ class WeatherController extends Controller {
             $singleWeather['visibility'] = $this->getVisibility($forecast);
             $singleWeather['temp'] = $this->getTemp($forecast);
             $singleWeather['type'] = $this->getType($forecast);
-            $singleWeather['windSpeed'] = $this->getType($forecast);
-            
-            //echo $this->getDay($forecast) . " ";
-            //echo $this->getDate($forecast) . " ";
-            //echo $this->getTime($forecast) . " ";
-            //echo $this->getVisibility($forecast) . " ";
-            //echo $this->getTemp($forecast) . " ";
-            //echo $this->getType($forecast) . " ";
-            //echo $this->getWind($forecast)->direction . " ";
-            //echo $this->getWind($forecast)->windspeed->mph . " ";
+            $singleWeather['windSpeed'] = $this->getWind($forecast)->windspeed->mph;
             array_push($wArray, $singleWeather);
-            // echo "<br />";
         }
         
         echo json_encode($wArray);
