@@ -7,7 +7,9 @@ class HomeController extends Controller {
         if($this->method == "post") {
             echo "this is post.<br>";
         }
-        $this->slim->redirect($this->base_url . '/News');
+                $this->renderHTML('home.html.twig');
+
+      //  $this->slim->redirect($this->base_url . '/home');
     }
 
     function testJSONAction($params) {
