@@ -47,6 +47,8 @@
 
 #weather-box { 
     float: left;
+   // height:500px;
+   
 }
 
 .weather-left { 
@@ -77,11 +79,14 @@
 
 .weather-visibility { 
     margin-top: 10px;
-    float:right;
+    float:left;
 }
 
 #events-box { 
     float: right;
+    overflow-y: scroll;
+    height: 400px;
+    width: 30%;
 }
 .weather-wind-speed{
     float:right;

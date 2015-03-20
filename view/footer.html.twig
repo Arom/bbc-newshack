@@ -44,7 +44,9 @@
                         var music = JSON.parse(data);
                         //console.log(music);
                         music.forEach(function(musicItem){
-                            console.log(musicItem['title']);
+                            document.getElementById("events-box").innerHTML+= "<span id=\"eventTitle\" class=\"event-title\">"+musicItem['title']+"</span> <br />";
+                            document.getElementById("events-box").innerHTML +=  "<img src="+musicItem['img']+" id=\"eventImage\"><br />";
+        console.log(musicItem['title']);
                             console.log(musicItem['img']);
                         });
                     }
