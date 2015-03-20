@@ -13,7 +13,7 @@ class NewsController extends Controller {
 
     function defaultAction($params) {
         $p = array();
-        $p['news_data'] = $this->getNewsByKeywords(array("technology", "science", "gaming", "kitten"));
+        $p['news_data'] = $this->getNewsByKeywords(array("film","tv","music","fun","events"));
         $this->renderHTML('news.html.twig', $p);
     }
 
