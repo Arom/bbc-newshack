@@ -5,7 +5,7 @@ class Controller {
     protected $slim = null;
     protected $db = null;
     protected $apiKey = "YB0MY3VMHyllzPqEf5alVj5bUvGpvDVi";
-    protected $apiBaseUrl = "http://data.test.bbc.co.uk/bbcrd-juicer/articles?size=50&";
+    protected $apiBaseUrl = "http://data.test.bbc.co.uk/bbcrd-juicer/articles?size=50&recent_first=yes&";
     protected static $extraParams = array();
     protected $base_url = '';
 
