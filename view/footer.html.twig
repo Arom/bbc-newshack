@@ -33,7 +33,9 @@
                    type:"POST",
                    url:"Weather/threeHours/id:"+data,
                    success:function(data){
-                       console.log(data);
+                       var weather = $.getJSON(data);
+                       
+                       
                    }
                })
             }
@@ -44,8 +46,7 @@
 
     function error(err) {
         console.warn('ERROR(' + err.code + '): ' + err.message);
-    }
-    ;
+    };
 
     navigator.geolocation.getCurrentPosition(success, error, options)
 </script>

@@ -9,7 +9,7 @@ class WeatherController extends Controller {
         if ($this->method == "post") {
             $container = array();
             $p = array();
-            
+
             $weather = JSONRequester::parseJSONFromURL
                             ("http://weather-api-proxy.cloud.bbc.co.uk/weather/feeds/en/" . $params['id'] . "/3hourlyforecast.json");
             $counter = 1;
@@ -26,7 +26,7 @@ class WeatherController extends Controller {
                 $container['windmph'] = $this->getWind($forecast)->windspeed->mph;
                 array_push($p, $container);
             }
-            
+
             $p['counter'] = $counter;
             $this->renderHTML('weather.html.twig');
         }
@@ -37,22 +37,33 @@ class WeatherController extends Controller {
                         ("http://weather-api-proxy.cloud.bbc.co.uk/weather/feeds/en/" . $params['id'] . "/3dayforecast.json");
         echo print_r($weather);
     }
-    
+
     function threeHoursAction($params) {
+        $wArray = array(); 
         $weather = JSONRequester::parseJSONFromURL
                         ("http://weather-api-proxy.cloud.bbc.co.uk/weather/feeds/en/" . $params['id'] . "/3hourlyforecast.json");
         foreach ($weather->forecastContent->forecasts as $forecast) {
-            echo $this->getDay($forecast) . " ";
-            echo $this->getDate($forecast) . " ";
-            echo $this->getTime($forecast) . " ";
-            echo $this->getVisibility($forecast) . " ";
-            echo $this->getTemp($forecast) . " ";
-            echo $this->getType($forecast) . " ";
-            echo $this->getWind($forecast)->direction . " ";
-            echo $this->getWind($forecast)->windspeed->mph . " ";
-
-            echo "<br />";
+            
+            $singleWeather = array(); 
+            $singleWeather['time'] = $this->getTime($forecast); 
+            $singleWeather['visibility'] = $this->getVisibility($forecast);
+            $singleWeather['temp'] = $this->getTemp($forecast);
+            $singleWeather['type'] = $this->getType($forecast);
+            $singleWeather['windSpeed'] = $this->getType($forecast);
+            
+            //echo $this->getDay($forecast) . " ";
+            //echo $this->getDate($forecast) . " ";
+            //echo $this->getTime($forecast) . " ";
+            //echo $this->getVisibility($forecast) . " ";
+            //echo $this->getTemp($forecast) . " ";
+            //echo $this->getType($forecast) . " ";
+            //echo $this->getWind($forecast)->direction . " ";
+            //echo $this->getWind($forecast)->windspeed->mph . " ";
+            array_push($wArray, $singleWeather);
+            // echo "<br />";
         }
+        
+        echo json_encode($wArray);
     }
 
     function getTime($forecast) {
