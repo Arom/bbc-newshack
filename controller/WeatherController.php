@@ -50,12 +50,19 @@ class WeatherController extends Controller {
             $singleWeather['temp'] = $this->getTemp($forecast);
             $singleWeather['type'] = $this->getType($forecast);
             $singleWeather['windSpeed'] = $this->getWind($forecast)->windspeed->mph;
+            $singleWeather['weatherIcon'] = $this->getWeatherIcon($forecast);
+            $singleWeather['windIcon'] = $this->getWindIcon($forecast);
             array_push($wArray, $singleWeather);
         }
         
         echo json_encode($wArray);
     }
-
+    function getWindIcon($forecast){
+        return $forecast->wind->iconGrey;
+    }
+    function getWeatherIcon($forecast){
+        return $forecast->weatherSymbol->webMedium;
+    }
     function getTime($forecast) {
         return $forecast->timeSlot;
     }
