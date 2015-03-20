@@ -34,12 +34,12 @@
                 var locationID;
                 var locationName;
                 location.forEach(function(locationItem){
-                   locationID = locationItem['id'];
+                  locationID = locationItem['id'];
                   locationName = locationItem['name'];
                 });
                 $.ajax({
                     type:"POST",
-                    url:"MusicEvents/getEventsByLocation/location:Aberystwyth,genre:rock",
+                    url:"MusicEvents/getEventsByLocation/location:"+locationName+",genre:rock",
                     success:function(data){
                         var music = JSON.parse(data);
                         console.log(music);
@@ -56,6 +56,8 @@
                        
                        var weather = JSON.parse(data);
                        weather.forEach(function(weatherItem){
+                         //  console.log(weatherItem['weatherIcon']);
+                         //  console.log(weatherItem['windIcon']);
                          // console.log(weatherItem['time']);
                          // weatherItem['type'];
                          // weatherItem['temp']
