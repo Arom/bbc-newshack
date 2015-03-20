@@ -15,4 +15,25 @@
  */
 class News extends BaseNews
 {
+    protected $domain = "";
+    protected $category = "";
+
+    
+    public function getDomain(){
+        return $this->domain;
+    }
+    
+    public function setDomain($dom){
+        $this->domain = $dom;
+    }
+
+    
+    public function getCategory(){
+        return $this->$category;
+    }
+    
+    public function setCategory($dom){
+        $this->$category = $dom;
+    }
+    
 }

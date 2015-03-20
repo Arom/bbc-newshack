@@ -1,10 +1,10 @@
 <?php
+
 /**
  * Description of NewsController.
  *
  * @author agilob
  */
-
 include_once 'Controller.php';
 include_once '../lib/JSONRequester.php';
 require_once '../config.php';
@@ -12,30 +12,30 @@ require_once '../config.php';
 class NewsController extends Controller {
 
     function defaultAction($params) {
-      $p = array();
-      $p['news_data'] = $this->getNewsByKeywords(array("technology", "science", "gaming", "kitten"));
-      $this->renderHTML('news.html.twig', $p);
+        $p = array();
+        $p['news_data'] = $this->getNewsByKeywords(array("technology", "science", "gaming", "kitten"));
+        $this->renderHTML('news.html.twig', $p);
     }
 
     function getNewsByKey($keyword) {
-        $jsonData = JSONRequester::parseJSONFromURL($this->apiBaseUrl. "q=" . $keyword . '&apikey=' . $this->apiKey);
+        $jsonData = JSONRequester::parseJSONFromURL($this->apiBaseUrl . "q=" . $keyword . '&apikey=' . $this->apiKey);
         return $this->getNewsFromJson($jsonData);
     }
 
     function getNewsByKeywords($keywords) {
 
         $query = "";
-        for($i = 0; $i < count($keywords) -1; $i++ ){
-          $query = $query . $keywords[$i] . " OR ";
+        for ($i = 0; $i < count($keywords) - 1; $i++) {
+            $query = $query . $keywords[$i] . " OR ";
         }
         $query = $query . $keywords[count($keywords) - 1];
 
-        $jsonData = JSONRequester::parseJSONFromURL($this->apiBaseUrl. "q=" . urlencode($query) . '&apikey=' . $this->apiKey);
+        $jsonData = JSONRequester::parseJSONFromURL($this->apiBaseUrl . "q=" . urlencode($query) . '&apikey=' . $this->apiKey);
         return $this->getNewsFromJson($jsonData);
     }
 
     function getNewsByKeywordAction($params) {
-        $jsonData = JSONRequester::parseJSONFromURL($this->apiBaseUrl. "q=" . $params['k'] . '&apikey=' . $this->apiKey);
+        $jsonData = JSONRequester::parseJSONFromURL($this->apiBaseUrl . "q=" . $params['k'] . '&apikey=' . $this->apiKey);
         return $this->getNewsFromJson($jsonData);
     }
 
@@ -50,18 +50,29 @@ class NewsController extends Controller {
     function getNewsFromJson($json) {
         $allNews = array();
 
-        foreach($json->hits as $hit){
+        foreach ($json->hits as $hit) {
 
-          if (!is_null($hit->image) && !$hit->image == "") {
-            $news = new News();
-            $news->setTitle($hit->title);
-            $news->setShortContent($hit->description);
-            $news->setContent($hit->body);
-            $news->setImage($hit->image);
-            $news->setUrl($hit->url);
-            array_push($allNews, $news);
-          }
+            if (!is_null($hit->image) && !$hit->image == "") {
+                $news = new News();
+                $news->setTitle($hit->title);
+                $news->setShortContent($hit->description);
+                $news->setContent($hit->body);
+                $news->setImage($hit->image);
+                $news->setUrl($hit->url);
 
+                //doesnt work.
+//                if($hit->concepts[0]->isSet()) {
+//                    $c = (array) $hit->concepts[0];
+//                    $cat = $c['generic-type'];
+//                    echo($cat);
+////            $news->setCategory(
+////                    str_replace("http://dbpedia.org/ontology/", "" ,)
+////                    );
+//                }
+
+
+                array_push($allNews, $news);
+            }
         }
         return $allNews;
     }
