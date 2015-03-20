@@ -1,5 +1,5 @@
-    </div>
-  </div>
+</div>
+</div>
 
 </div>
 
@@ -8,27 +8,44 @@
 </body>
 
 </html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script>
-var options = {
-  enableHighAccuracy: true,
-  timeout: 5000,
-  maximumAge: 0
-};
 
-function success(pos) {
-  var crd = pos.coords;
+    var options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+    };
 
-  console.log('Your current position is:');
-  console.log('Latitude : ' + crd.latitude);
-  console.log('Longitude: ' + crd.longitude);
-  console.log('More or less ' + crd.accuracy + ' meters.');
-  
-  
-};
+    function success(pos) {
+        var crd = pos.coords;
 
-function error(err) {
-  console.warn('ERROR(' + err.code + '): ' + err.message);
-};
+        console.log('Your current position is:');
+        console.log('Latitude : ' + crd.latitude);
+        console.log('Longitude: ' + crd.longitude);
+        console.log('More or less ' + crd.accuracy + ' meters.');
 
-navigator.geolocation.getCurrentPosition(success, error, options)
+        $.ajax({
+            type: "POST",
+            url: "Location/findlocationidbycoordinates/lat:" + crd.latitude + ",long:" + crd.longitude,
+            success: function(data) {
+               $.ajax({
+                   type:"POST",
+                   url:"Weather/threeHours/id:"+data,
+                   success:function(data){
+                       console.log(data);
+                   }
+               })
+            }
+
+        });
+    }
+    ;
+
+    function error(err) {
+        console.warn('ERROR(' + err.code + '): ' + err.message);
+    }
+    ;
+
+    navigator.geolocation.getCurrentPosition(success, error, options)
 </script>

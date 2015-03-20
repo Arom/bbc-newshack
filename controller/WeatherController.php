@@ -37,7 +37,7 @@ class WeatherController extends Controller {
                         ("http://weather-api-proxy.cloud.bbc.co.uk/weather/feeds/en/" . $params['id'] . "/3dayforecast.json");
         echo print_r($weather);
     }
-
+    
     function threeHoursAction($params) {
         $weather = JSONRequester::parseJSONFromURL
                         ("http://weather-api-proxy.cloud.bbc.co.uk/weather/feeds/en/" . $params['id'] . "/3hourlyforecast.json");
