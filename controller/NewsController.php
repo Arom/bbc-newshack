@@ -61,14 +61,16 @@ class NewsController extends Controller {
                 $news->setUrl($hit->url);
 
                 //doesnt work.
-//                if($hit->concepts[0]->isSet()) {
-//                    $c = (array) $hit->concepts[0];
-//                    $cat = $c['generic-type'];
-//                    echo($cat);
-////            $news->setCategory(
-////                    str_replace("http://dbpedia.org/ontology/", "" ,)
-////                    );
-//                }
+                if($hit->concepts) {
+                    $c = (array) $hit->concepts[0];
+                    $cat = $c['generic-type'];
+                    $cat = str_replace("http://dbpedia.org/ontology/", "", $cat);
+                    $cat = str_replace("http://dbpedia.org/resource/", "", $cat);
+
+                    $news->setCategory($cat);
+                } else {
+                    $news->setCategory("Pukeko");
+                }
 
 
                 array_push($allNews, $news);

@@ -15,8 +15,8 @@
  */
 class News extends BaseNews
 {
-    protected $domain = "";
-    protected $category = "";
+    protected $domain;
+    protected $category;
 
     
     public function getDomain(){
@@ -29,11 +29,11 @@ class News extends BaseNews
 
     
     public function getCategory(){
-        return $this->$category;
+        return $this->category;
     }
     
     public function setCategory($dom){
-        $this->$category = $dom;
+        $this->category = $dom;
     }
     
 }
