@@ -1,4 +1,43 @@
 {% include 'header.html.twig' %}
+<div class="container" id="top-boxes">
+    <div id="left-boxs">
+    <div id="weather-box">
+        <div class="weather-left">
+            <img id="weatherIcon" src="" class="weather-icon">
+            <img id="windIcon" src="" class="weather-icon">
+        </div>
+        <div class="weather-right">
+            <p id="hour" class="weather-hour-location"></p>
+            <p id="temp" class="weather-temperature"></p>
+
+        </div>
+        <div style=" display:inline-block; width: 120px; float: right;">
+            <p id="windSpeed" class="weather-wind-speed"></p>
+            <p id="visibility" class="weather-visibility"></p>
+        </div>
+    </div>
+        
+     <div id="events-box">
+        {# <span id="eventTitle" class="event-title"></span>
+         <img src="" id="eventImage">#}
+    </div>
+    </div>
+
+       <div style="width:53.5%; height:250px">
+           <a class="twitter-timeline" href="https://twitter.com/hashtag/bbcnews" data-widget-id="578919113327775744">#bbcnews Tweets</a>
+    <script>!function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+            if (!d.getElementById(id)) {
+                js = d.createElement(s);
+                js.id = id;
+                js.src = p + "://platform.twitter.com/widgets.js";
+                fjs.parentNode.insertBefore(js, fjs);
+            }
+        }(document, "script", "twitter-wjs");</script>
+    
+       </div>
+ 
+</div>
 
   <div id="page" class="configurable index " data-story-id="front_page">
     <div class="container" role="main">

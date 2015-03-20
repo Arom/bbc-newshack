@@ -51,6 +51,9 @@ class MusicEventsController extends Controller {
                 $eventItem = array();
                 $eventItem['img'] = $this->getImg($item);
                 $eventItem['title'] = $item->title;
+                $eventItem['venue'] = $item->venue->name;
+                $eventItem['city'] = $item->venue->location->city;
+                
                 array_push($eventsArray, $eventItem);
             }
         }

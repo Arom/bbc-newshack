@@ -1,0 +1,237 @@
+{% include 'header.html.twig' %}
+
+  <div id="page" class="configurable index " data-story-id="front_page">
+    <div class="container" role="main" style="width: 500px;">
+
+        <h1 class="index-title index-title--redundant index-title--front-page" id="comp-index-title" data-index-title-meta="{&quot;id&quot;:&quot;comp-index-title&quot;,&quot;type&quot;:&quot;index-title&quot;,&quot;handler&quot;:&quot;indexTitle&quot;,&quot;deviceGroups&quot;:null,&quot;opts&quot;:{&quot;alwaysVisible&quot;:false,&quot;onFrontPage&quot;:true},&quot;template&quot;:&quot;index-title&quot;}">BBC News Home</h1>
+
+        <div class="container--primary-and-secondary-columns column-clearfix">
+        </div>
+
+      <div class="container mt20"style="width: 500px;">
+
+        <h2>Register for personalised news experience</h2>
+        <form role="form" action="{{ siteUrl('/user/register') }}" method="POST">
+          <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username">
+          </div>
+          <div class="form-group">
+            <label for="pwd">Password:</label>
+            <input type="password" class="form-control" name="password" id="pwd" placeholder="Enter password">
+          </div>
+          <div class="form-group">
+            <label for="updpwd">Confirm password:</label>
+            <input type="password" class="form-control" id="updpwd" name="confirmpassword" placeholder="Enter password">
+          </div>
+
+          <div class="form-group">
+            <label for="hometown">What is your home town?</label>
+            <input type="text" class="form-control" id="hometown" name="hometown" placeholder="Enter home town">
+          </div>
+
+          <div class="form-group">
+            <label for="towns">Any other towns or cities that you would like to be informed on?</label>
+            <input type="text" class="form-control" id="towns" name="towns" placeholder="Enter towns">
+          </div>
+
+          <div class="form-group">
+            <label>How do you prefer to consume your news content?</label>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value="video">
+                Video
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value="written">
+                Written article
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value="written">
+                Radio/podcast
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Which category of news content is most appealing to you? </label>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value="tabloid">
+                Tabloid
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value="politics">
+                Political current affairs
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value="weather">
+                Weather
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value="travel">
+                Travel
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value="entertainment">
+                Entertainment
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value="events">
+                Events
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Which ones, if any, are you put off by?</label>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value="tabloid">
+                Tabloid
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value="politics">
+                Political current affairs
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value="weather">
+                Weather
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value="travel">
+                Travel
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value="entertainment">
+                Entertainment
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value="events">
+                Events
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Please select the following categories to indicate your interests?</label>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value="tabloid">
+                Sports
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value="politics">
+                Film
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value="weather">
+                Television
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value="travel">
+                Music
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value="entertainment">
+                Art
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value="events">
+                Literature
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value="events">
+                Celebrities
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value="events">
+                Health & Fitness
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value="events">
+                British politics
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value="events">
+                International politics
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value="events">
+                Science
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" value="events">
+                Technology
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="inst">Are you studying at university or are you interested in news and events concerning a university? </br> If so, please state your institution here.</label>
+            <input type="text" class="form-control" id="inst" name="inst" placeholder="Enter institution">
+          </div>
+
+          <div class="form-group">
+            <label for="genre">What genre of music most interests you?</label>
+            <input type="text" class="form-control" id="genre" name="genre" placeholder="Enter genre">
+          </div>
+
+          <div class="checkbox">
+            <label><input type="checkbox"> I am a driver</label>
+          </div>
+
+
+          <button type="submit" class="btn btn-default">Register</button>
+        </form>
+
+      </div>
+
+
+{% include 'footer.html.twig' %}

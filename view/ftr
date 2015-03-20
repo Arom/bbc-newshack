@@ -1,0 +1,57 @@
+</div>
+</div>
+
+</div>
+
+</div>
+
+</body>
+
+</html>
+<script>
+
+    var options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+    };
+
+    function success(pos) {
+        var crd = pos.coords;
+
+        console.log('Your current position is:');
+        console.log('Latitude : ' + crd.latitude);
+        console.log('Longitude: ' + crd.longitude);
+        console.log('More or less ' + crd.accuracy + ' meters.');
+
+        $.ajax({
+            type: "POST",
+            url: "Location/findlocationidbycoordinates/lat:" + crd.latitude + ",long:" + crd.longitude,
+            success: function(data) {
+               $.ajax({
+                   type:"POST",
+                   url:"Weather/threeHours/id:"+data,
+                   success:function(data){
+                    //   console.log(data);
+                       var weather = JSON.parse(data);
+                       weather.forEach(function(weatherItem){
+                         //  console.log(weatherItem['time']);
+                         // weatherItem['type'];
+                         //weatherItem['temp']
+                         //weatherItem['windSpeed']
+                         //weatherItem['visibility']
+                       })
+                   }
+               })
+            }
+
+        });
+    }
+    ;
+
+    function error(err) {
+        console.warn('ERROR(' + err.code + '): ' + err.message);
+    };
+
+    navigator.geolocation.getCurrentPosition(success, error, options)
+</script>
