@@ -44,7 +44,7 @@ class NewsController extends Controller {
             $news->setShortContent($hit->description);
             $news->setContent($hit->body);
 
-            if (is_null($hit->image)) {
+            if (is_null($hit->image) || $hit->image == "") {
                 $news->setImage("https://newevolutiondesigns.com/images/freebies/cat-wallpaper-2.jpg");
             } else {
                 $news->setImage($hit->image);
