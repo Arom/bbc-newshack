@@ -2,7 +2,8 @@
     {{ loginerror }}
 {% endif %}
 <form method="post" action="{{ siteUrl('/user/login') }}">
-    <input type="text" name="username">
-    <input type="password" name="password">
-    <input type="submit" value="login">
-</form>
+    <input type="text" name="username"><br>
+    <input type="password" name="password"><br>
+    <input type="submit" value="Login"><br>
+</form><br>
+<a href="{{ siteUrl('/user/register') }}">Register</a>

@@ -21,6 +21,7 @@
     text-align: center;
     padding-top: 5px;
     display: none;
+    background-color: #fff;
 }
 
 #login-box input { 
