@@ -9,7 +9,7 @@ $conf = array (
       'adapter' => 'sqlite',
       'connection' => 
       array (
-        'dsn' => 'sqlite:/home/arom/Documents/bbc-newshack/db/database.db',
+        'dsn' => 'sqlite:/Users/kamil/Uni/NewsHack/bbc-newshack/db/database.db',
       ),
     ),
     'default' => 'newshack',

@@ -14,29 +14,34 @@
   margin-bottom: 20px;
 }
 
-#login-box { 
-    position: absolute; 
+#login-box {
+    position: absolute;
     border: 1px solid #ccc;
-    width: 180px; 
+    width: 180px;
     text-align: center;
     padding-top: 5px;
     display: none;
     background-color: #fff;
 }
 
-#login-box input { 
-    border: 1px solid #000; 
-    margin: 0 0 5px 0; 
+#login-box input {
+    border: 1px solid #000;
+    margin: 0 0 5px 0;
     width: 160px;
     height: 22px;
 }
 
-#top-boxes { 
-    margin-left: auto; 
-    margin-right: auto; 
+.article{
+  width: 100%;
+  height: 500px;
 }
 
-#weather-box, #events-box { 
+#top-boxes {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#weather-box, #events-box {
     display: inline-block;
     width: 51%; 
     height: 100px;
@@ -45,15 +50,15 @@
     padding: 1%;
 }
 
-#weather-box { 
+#weather-box {
     float: left;
    // height:500px;
-   
+
 }
 
-.weather-left { 
-    display: inline-block; 
-    float: left; 
+.weather-left {
+    display: inline-block;
+    float: left;
     width: 35%;
     height: 100%;
     border-right: solid 1px #ccc;
@@ -64,25 +69,25 @@
     padding-left: 10px;
 }
 
-.weather-hour-location { 
+.weather-hour-location {
 }
 
-.weather-temperature { 
+.weather-temperature {
     margin: 10px;
     font-size: 52px;
     font-weight: bold;
 }
 
 .weather-icon {
-    height: 50%; 
+    height: 50%;
 }
 
-.weather-visibility { 
+.weather-visibility {
     margin-top: 10px;
     float:left;
 }
 
-#events-box { 
+#events-box {
     float: right;
     overflow-y: scroll;
     height: 400px;
