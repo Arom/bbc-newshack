@@ -90,7 +90,7 @@
   <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="jssignals-1" src="http://static.bbci.co.uk/frameworks/jssignals/0.3.6/modules/jssignals-1.js"></script>
 
 
-  <link rel="stylesheet" href="/public/css/main.css">
+  <link rel="stylesheet" href="/css/main.css">
 
 
 </head>
@@ -127,6 +127,16 @@
             <a id="idcta-link" href="/public/"><img id="idcta-image"
               src="http://static.bbci.co.uk/id/0.27.15/img/bbcid_orb_signin_dark.png"
               alt="" width="18" height="18"><span id="idcta-username">Sign in</span></a>
+
+              
+            {% if username is defined %}
+                <a id="idcta-link" href="{{ siteUrl('user/logout') }}"><img id="idcta-image" src="http://static.bbci.co.uk/id/0.27.15/img/bbcid_orb_signin_dark.png" alt="" width="18" height="18"><span id="idcta-username">Sign out ({{ username}})</span></a>
+            {% else %}
+            <a id="idcta-link" href="#" onmouseover="document.getElementById('login-box').style.display='block';"><img id="idcta-image" src="http://static.bbci.co.uk/id/0.27.15/img/bbcid_orb_signin_dark.png" alt="" width="18" height="18"><span id="idcta-username">Sign in</span></a>
+                <div id="login-box">
+                    {% include 'login.html.twig' %}
+                </div>
+            {% endif %} 
           </div>
 
         </div>
